@@ -6,13 +6,30 @@ package poppyfanboy.snakegame;
   * Implements GUI part of the application,
   * conducts the main loop of the game session
   *
-  * @version 0.1
+  * @version 0.1.1
   * @author PoppyFanboy
   */
 
-public class SnakeGame {	
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.scene.*;
+import javafx.scene.shape.*;
+
+import javafx.event.*;
+import javafx.scene.input.*;
+
+import java.util.*;
+
+
+public class SnakeGame extends Application {
+	@Override
+	public void start(Stage stage) {
+		stage.setTitle("Snake Game | by PoppyFanboy");
+		stage.show();
+	}
+	
 	public static void main(String args[]) {
-		
+		launch(args);
 	}
 }
 
