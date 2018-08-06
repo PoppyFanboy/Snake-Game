@@ -15,7 +15,7 @@ package poppyfanboy.snakegame;
   * - checking whether it is possible for the snake to move
   *   (if the snake meets its own body)
   *
-  * @version 0.1
+  * @version 0.1.1
   * @author PoppyFanboy
   */
   
@@ -30,11 +30,42 @@ class Snake {
 	private SnakeBlock tail;
 	
 	Snake(int initX, int initY, int initLength) {
+		head = new SnakeBlock(initX, initY);
 		
+		SnakeBlock previous = head;
+		for (int i = x + 1; i <= x + initLength; i++) {
+			previous = new SnakeBlock(previous, i, y);
+		}
+		tail = previous;
+		
+		dir = Direction.WEST;
 	}
 	
 	// returns the number of gained points
 	int move() {
+		int newX = head.x;
+		int newY = head.y;
+		
+		switch (dir) {
+			NORTH:	newY--;
+					break;
+					
+			EAST:	newX++;
+					break;
+					
+			SOUTH:	nexY++;
+					break;
+					
+			WEST:	newX--;
+					break;
+		}
+		
+		SnakeBlock newHead = new SnakeBlock(newX, newY);
+		head.next = newHead;
+		head = newHead;
+		
+		tail = tail.next;
+		
 		return 0;
 	}
 	
