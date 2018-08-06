@@ -24,17 +24,17 @@ enum Direction {
 }
   
 class Snake {
-	private Direction dir;
+	Direction dir;
 	
-	private SnakeBlock head;
-	private SnakeBlock tail;
+	SnakeBlock head;
+	SnakeBlock tail;
 	
 	Snake(int initX, int initY, int initLength) {
 		head = new SnakeBlock(initX, initY);
 		
 		SnakeBlock previous = head;
-		for (int i = x + 1; i <= x + initLength; i++) {
-			previous = new SnakeBlock(previous, i, y);
+		for (int i = initX + 1; i <= initX + initLength; i++) {
+			previous = new SnakeBlock(previous, i, initY);
 		}
 		tail = previous;
 		
@@ -42,29 +42,33 @@ class Snake {
 	}
 	
 	// returns the number of gained points
-	int move() {
+	int move() {		
+		SnakeBlock block = this.tail;
+		do {
+			block.setX(block.next.getX());
+			block.setY(block.next.getY());
+			block = block.next;
+		} while (block.next != null);
+		
 		int newX = head.x;
 		int newY = head.y;
 		
 		switch (dir) {
-			NORTH:	newY--;
-					break;
+			case NORTH:	newY--;
+						break;
 					
-			EAST:	newX++;
-					break;
+			case EAST:	newX++;
+						break;
 					
-			SOUTH:	nexY++;
-					break;
+			case SOUTH:	newY++;
+						break;
 					
-			WEST:	newX--;
-					break;
+			case WEST:	newX--;
+						break;
 		}
 		
-		SnakeBlock newHead = new SnakeBlock(newX, newY);
-		head.next = newHead;
-		head = newHead;
-		
-		tail = tail.next;
+		head.setX(newX);
+		head.setY(newY);
 		
 		return 0;
 	}

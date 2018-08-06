@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import javafx.scene.*;
 import javafx.scene.shape.*;
 
+import javafx.scene.layout.*;
+
 import javafx.event.*;
 import javafx.scene.input.*;
 
@@ -22,18 +24,59 @@ import java.util.*;
 
 
 public class SnakeGame extends Application {
+	static Snake snake;
+	static Timer timer;
+	static Pane snakeSegments;
+	
 	@Override
-	public void start(Stage stage) {
-		Group root = new Group();
+	public void start(Stage stage) throws InterruptedException{
+		snakeSegments = new Pane();
 		
-		Scene scene = new Scene(root, 640, 480);
+		Scene scene = new Scene(snakeSegments, 640, 480);
 		
 		stage.setScene(scene);
 		stage.setTitle("Snake Game | by PoppyFanboy");
+		
+		snake = new Snake(15, 15, 80);
+
+		scene.addEventFilter(KeyEvent.KEY_PRESSED, new ControlKeyEvent());
+		
+		SnakeBlock block = snake.tail;
+		do {
+			snakeSegments.getChildren().add(block.rect);
+			block = block.next;			
+		} while (block != null);
+		
 		stage.show();
+		
+		timer = new Timer();
+		timer.schedule(new MoveSnakeTask(), 25, 25);
 	}
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws InterruptedException {
 		launch(args);
+		timer.cancel();
+	}
+}
+
+class ControlKeyEvent implements EventHandler<KeyEvent> {
+	public void handle(KeyEvent event) {
+		KeyCode code = event.getCode();
+		
+		if (code == KeyCode.UP) {
+			SnakeGame.snake.dir = Direction.NORTH;
+		} else if (code == KeyCode.DOWN) {
+			SnakeGame.snake.dir = Direction.SOUTH;
+		} else if (code == KeyCode.LEFT) {
+			SnakeGame.snake.dir = Direction.WEST;
+		} else if (code == KeyCode.RIGHT) {
+			SnakeGame.snake.dir = Direction.EAST;
+		}
+	}
+}
+
+class MoveSnakeTask extends TimerTask {
+	public void run() {
+		SnakeGame.snake.move();
 	}
 }
