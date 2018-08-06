@@ -24,6 +24,11 @@ import java.util.*;
 public class SnakeGame extends Application {
 	@Override
 	public void start(Stage stage) {
+		Group root = new Group();
+		
+		Scene scene = new Scene(root, 640, 480);
+		
+		stage.setScene(scene);
 		stage.setTitle("Snake Game | by PoppyFanboy");
 		stage.show();
 	}
@@ -32,15 +37,3 @@ public class SnakeGame extends Application {
 		launch(args);
 	}
 }
-
-/*private static void initNewGame() {
-	int x = FIELD_SIZE / 2;
-	int y = FIELD_SIZE / 2;
-	head = new SnakeBlock(FIELD_SIZE / 2, FIELD_SIZE / 2);
-		
-	SnakeBlock previous = head;
-	for (int i = x + 1; i < x + FIELD_SIZE / 4; i++) {
-		previous = new SnakeBlock(previous, i, y);
-	}
-	tail = previous;
-}*/
