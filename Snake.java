@@ -66,6 +66,7 @@ class Snake {
 			case WEST:	newX--;
 						break;
 		}
+		
 		head.setX(newX);
 		head.setY(newY);
 		
