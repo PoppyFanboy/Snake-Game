@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import javafx.scene.*;
 import javafx.scene.shape.*;
 
+import javafx.scene.layout.*;
+
 import javafx.event.*;
 import javafx.scene.input.*;
 
@@ -24,18 +26,18 @@ import java.util.*;
 public class SnakeGame extends Application {
 	static Snake snake;
 	static Timer timer;
-	static Group snakeSegments;
+	static Pane snakeSegments;
 	
 	@Override
 	public void start(Stage stage) throws InterruptedException{
-		snakeSegments = new Group();
+		snakeSegments = new Pane();
 		
-		Scene scene = new Scene(snakeSegments, 1024, 768);
+		Scene scene = new Scene(snakeSegments, 640, 480);
 		
 		stage.setScene(scene);
 		stage.setTitle("Snake Game | by PoppyFanboy");
 		
-		snake = new Snake(15, 15, 20);
+		snake = new Snake(15, 15, 80);
 
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, new ControlKeyEvent());
 		
@@ -48,7 +50,7 @@ public class SnakeGame extends Application {
 		stage.show();
 		
 		timer = new Timer();
-		timer.schedule(new MoveSnakeTask(), 20, 20);
+		timer.schedule(new MoveSnakeTask(), 25, 25);
 	}
 	
 	public static void main(String args[]) throws InterruptedException {
