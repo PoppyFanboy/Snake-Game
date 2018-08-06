@@ -31,8 +31,7 @@ class SnakeBlock {
 	SnakeBlock(int x, int y) {
 		this.x = x;
 		this.y = y;
-		Rectangle newRect = new Rectangle(10 * x, 10 * y, 10, 10);
-		this.rect = newRect;
+		this.rect = new Rectangle(10 * x, 10 * y, 10, 10);
 	}
 	
 	void setX(int x) {
