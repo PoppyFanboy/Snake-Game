@@ -16,10 +16,10 @@ package poppyfanboy.snakegame;
 import javafx.scene.shape.*;
   
 class SnakeBlock {
-	SnakeBlock next = null;          // I know that it is better to declare class fields as "private"
-	                                 // Nevertheless, in my opinion, there is no need in such sophistication
-	int x = 0;                       // in so primitive class. Fields' bounds checks will be implemented in
-	int y = 0;                       // other classes
+	SnakeBlock next = null;
+
+	int x = 0;
+	int y = 0;
 	
 	Rectangle rect;
 	
