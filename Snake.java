@@ -66,16 +66,16 @@ class Snake {
 		
 		switch (dir) {
 			case NORTH:	newY--;
-						break;
+					break;
 					
 			case EAST:	newX++;
-						break;
+					break;
 					
 			case SOUTH:	newY++;
-						break;
+					break;
 					
 			case WEST:	newX--;
-						break;
+					break;
 		}
 		
 		SnakeBlock newHead = new SnakeBlock(newX, newY);
