@@ -6,51 +6,50 @@ package poppyfanboy.snakegame;
   * Implements GUI part of the application,
   * conducts the main loop of the game session
   *
-  * @version 0.1.1
   * @author PoppyFanboy
   */
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.*;
-import javafx.scene.shape.*;
 
 import javafx.scene.layout.*;
 
 import javafx.event.*;
 import javafx.scene.input.*;
+import javafx.scene.canvas.*;
 
 import java.util.*;
 
 
 public class SnakeGame extends Application {
 	static Snake snake;
-	static Timer timer;
-	static Pane snakeSegments;
+	private static Timer timer;
 	
 	@Override
 	public void start(Stage stage) throws InterruptedException{
-		snakeSegments = new Pane();
+		Group gameDisplayNode = new Group();
+		Scene scene = new Scene(gameDisplayNode, 640, 480);
 		
-		Scene scene = new Scene(snakeSegments, 640, 480);
+		Canvas canvas = new Canvas(640, 480);		
+		gameDisplayNode.getChildren().add(canvas);
 		
 		stage.setScene(scene);
 		stage.setTitle("Snake Game | by PoppyFanboy");
 		
-		snake = new Snake(15, 15, 80);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		snake = new Snake(gc);
 
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, new ControlKeyEvent());
-		
-		SnakeBlock block = snake.tail;
-		do {
-			snakeSegments.getChildren().add(block.rect);
-			block = block.next;			
-		} while (block != null);
 		
 		stage.show();
 		
 		timer = new Timer();
-		timer.schedule(new MoveSnakeTask(), 25, 25);
+		timer.schedule( new TimerTask() {
+			public void run() {
+				snake.move();
+			}
+		}, 50, 50);
 	}
 	
 	public static void main(String args[]) throws InterruptedException {
@@ -64,19 +63,13 @@ class ControlKeyEvent implements EventHandler<KeyEvent> {
 		KeyCode code = event.getCode();
 		
 		if (code == KeyCode.UP) {
-			SnakeGame.snake.dir = Direction.NORTH;
+			SnakeGame.snake.setDir(Direction.NORTH);
 		} else if (code == KeyCode.DOWN) {
-			SnakeGame.snake.dir = Direction.SOUTH;
+			SnakeGame.snake.setDir(Direction.SOUTH);
 		} else if (code == KeyCode.LEFT) {
-			SnakeGame.snake.dir = Direction.WEST;
+			SnakeGame.snake.setDir(Direction.WEST);
 		} else if (code == KeyCode.RIGHT) {
-			SnakeGame.snake.dir = Direction.EAST;
+			SnakeGame.snake.setDir(Direction.EAST);
 		}
-	}
-}
-
-class MoveSnakeTask extends TimerTask {
-	public void run() {
-		SnakeGame.snake.move();
 	}
 }
