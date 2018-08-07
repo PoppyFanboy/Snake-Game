@@ -9,19 +9,17 @@ package poppyfanboy.snakegame;
   *  - its coordinates as a pair of integers x and y 
   *  - a reference to the next segment of a snake counting from tail to head
   *
-  * @version 0.1.1
   * @author PoppyFanboy
   */
   
-import javafx.scene.shape.*;
+import javafx.scene.canvas.*;
+import javafx.scene.paint.*;
   
 class SnakeBlock {
 	SnakeBlock next = null;
-
-	int x = 0;
-	int y = 0;
-	
-	Rectangle rect;
+  
+	private int x = 0;
+	private int y = 0;
 	
 	SnakeBlock(SnakeBlock next, int x, int y) {
 		this(x, y);
@@ -31,24 +29,18 @@ class SnakeBlock {
 	SnakeBlock(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.rect = new Rectangle(10 * x, 10 * y, 10, 10);
 	}
 	
-	void setX(int x) {
-		this.x = x;
-		this.rect.setX(10 * x);
-	}
-	
-	void setY(int y) {
-		this.y = y;
-		this.rect.setY(10 * y);
+	void paint(GraphicsContext gc, int blockSize, Color color) {
+		gc.setFill(color);
+		gc.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
 	}
 	
 	int getX() {
-		return this.x;
+		return x;
 	}
 	
 	int getY() {
-		return this.y;
+		return y;
 	}
 }
