@@ -15,43 +15,54 @@ package poppyfanboy.snakegame;
   * - checking whether it is possible for the snake to move
   *   (if the snake meets its own body)
   *
-  * @version 0.1.1
   * @author PoppyFanboy
   */
+  
+import javafx.scene.canvas.*;
+import javafx.scene.paint.*;
   
 enum Direction {
 	NORTH, EAST, SOUTH, WEST
 }
   
 class Snake {
-	Direction dir;
+	private Direction dir;
 	
-	SnakeBlock head;
-	SnakeBlock tail;
+	private SnakeBlock head;
+	private SnakeBlock tail;
 	
-	Snake(int initX, int initY, int initLength) {
+	private GraphicsContext gc;
+	private int blockSize;
+	
+	Snake(GraphicsContext gc, int blockSize) {
+		this.gc = gc;
+		this.blockSize = blockSize;
+		
+		int initX = (int) gc.getCanvas().getWidth() / blockSize / 2;
+		int initY = (int) gc.getCanvas().getHeight() / blockSize / 2;
+		int initLength = 10;
+		
 		head = new SnakeBlock(initX, initY);
+		head.paint(gc, blockSize, Color.BLACK);
 		
 		SnakeBlock previous = head;
 		for (int i = initX + 1; i <= initX + initLength; i++) {
 			previous = new SnakeBlock(previous, i, initY);
+			previous.paint(gc, blockSize, Color.BLACK);
 		}
 		tail = previous;
 		
 		dir = Direction.WEST;
 	}
 	
+	Snake(GraphicsContext gc) {
+		this(gc, 10);
+	}
+	
 	// returns the number of gained points
-	int move() {		
-		SnakeBlock block = this.tail;
-		do {
-			block.setX(block.next.getX());
-			block.setY(block.next.getY());
-			block = block.next;
-		} while (block.next != null);
-		
-		int newX = head.x;
-		int newY = head.y;
+	int move() {
+		int newX = head.getX();
+		int newY = head.getY();
 		
 		switch (dir) {
 			case NORTH:	newY--;
@@ -67,8 +78,14 @@ class Snake {
 						break;
 		}
 		
-		head.setX(newX);
-		head.setY(newY);
+		SnakeBlock newHead = new SnakeBlock(newX, newY);
+		head.next = newHead;
+		head = newHead;
+		
+		head.paint(gc, blockSize, Color.BLACK);
+		tail.paint(gc, blockSize, Color.WHITE);
+		
+		tail = tail.next;
 		
 		return 0;
 	}
@@ -76,5 +93,9 @@ class Snake {
 	// returns true if the snake is able to move further
 	boolean isSafe() {
 		return true;
+	}
+	
+	void setDir(Direction dir) {
+		this.dir = dir;
 	}
 }
