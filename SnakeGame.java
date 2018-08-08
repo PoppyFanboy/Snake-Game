@@ -40,7 +40,12 @@ public class SnakeGame extends Application {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		snake = new Snake(gc);
 
-		scene.addEventFilter(KeyEvent.KEY_PRESSED, new ControlKeyEvent());
+		scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent event) {
+				snake.changeDir(event.getCode());
+			}
+		});
 		
 		stage.show();
 		
@@ -55,21 +60,5 @@ public class SnakeGame extends Application {
 	public static void main(String args[]) throws InterruptedException {
 		launch(args);
 		timer.cancel();
-	}
-}
-
-class ControlKeyEvent implements EventHandler<KeyEvent> {
-	public void handle(KeyEvent event) {
-		KeyCode code = event.getCode();
-		
-		if (code == KeyCode.UP) {
-			SnakeGame.snake.setDir(Direction.NORTH);
-		} else if (code == KeyCode.DOWN) {
-			SnakeGame.snake.setDir(Direction.SOUTH);
-		} else if (code == KeyCode.LEFT) {
-			SnakeGame.snake.setDir(Direction.WEST);
-		} else if (code == KeyCode.RIGHT) {
-			SnakeGame.snake.setDir(Direction.EAST);
-		}
 	}
 }
