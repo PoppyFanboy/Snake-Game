@@ -49,31 +49,29 @@ public class Field {
 
     // returns false if (x,y) coordinate belongs to the snake
     boolean checkSnakeCollision(int x, int y) {
+        System.out.println(x + " -- " + y);
         SnakeBlock block = snake.getTail();
         do {
             if (block.getX() == x && block.getY() == y) {
-                return false;
+                return true;
             }
             block = block.next;
         } while (block != null);
 
-        return true;
+        return false;
     }
 
     // generates and paints food on game field
     boolean generateFood() {
         int randomCell = (int) (FIELD_WIDTH * FIELD_HEIGHT * Math.random());
-        int foodX = randomCell % FIELD_WIDTH;
-        int foodY = randomCell / FIELD_WIDTH;
 
-        while (gameField[randomCell / FIELD_WIDTH][randomCell % FIELD_WIDTH] != 0 ||
-               !checkSnakeCollision(randomCell % FIELD_WIDTH, randomCell / FIELD_WIDTH)) {
+        while (gameField[randomCell / FIELD_HEIGHT][randomCell % FIELD_WIDTH] != 0 ||
+               checkSnakeCollision(randomCell % FIELD_WIDTH, randomCell / FIELD_HEIGHT)) {
             randomCell++;
-            if (randomCell == FIELD_WIDTH * FIELD_HEIGHT) {
-                return false;
-            }
         }
 
+        int foodX = randomCell % FIELD_WIDTH;
+        int foodY = randomCell / FIELD_WIDTH;
         gameField[foodY][foodX] = 2;
         gc.setFill(Color.GREEN);
         gc.fillRect(foodX * blockSize, foodY * blockSize, blockSize, blockSize);

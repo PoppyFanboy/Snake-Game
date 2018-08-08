@@ -43,7 +43,7 @@ class Snake {
 		
 		int initX = (int) gc.getCanvas().getWidth() / blockSize / 2;
 		int initY = (int) gc.getCanvas().getHeight() / blockSize / 2;
-		int initLength = 5;
+		int initLength = 50;
 		
 		head = new SnakeBlock(initX, initY);
 		head.paint(gc, blockSize, Color.BLACK);
