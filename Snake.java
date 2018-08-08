@@ -23,19 +23,19 @@ import javafx.scene.paint.*;
 
 import javafx.scene.input.KeyCode;
 
-enum Direction { UP, RIGHT, DOWN, LEFT };
-
 class Snake {
-	// same order as in the Direction enum
-	private static final Offset[] OFFSETS = { new Offset(0, -1), new Offset(1, 0),
-			                                  new Offset(0, 1),  new Offset(-1, 0)};
-
 	private Direction dir;
 	private SnakeBlock head;
 	private SnakeBlock tail;
 	
 	private GraphicsContext gc;
 	private int blockSize;
+
+	// костыль: если mouthfull == true, то на следующем шаге змейки хвостовой
+	// блок визуально не убирается
+	private boolean mouthfull = false;
+	// костыль: если значение == true, то нажатия любых клавиш не обрабатываются
+	private boolean keyPressed = false;
 	
 	Snake(GraphicsContext gc, int blockSize) {
 		this.gc = gc;
@@ -43,7 +43,7 @@ class Snake {
 		
 		int initX = (int) gc.getCanvas().getWidth() / blockSize / 2;
 		int initY = (int) gc.getCanvas().getHeight() / blockSize / 2;
-		int initLength = (int) gc.getCanvas().getWidth() / blockSize / 5;
+		int initLength = 5;
 		
 		head = new SnakeBlock(initX, initY);
 		head.paint(gc, blockSize, Color.BLACK);
@@ -61,33 +61,43 @@ class Snake {
 	Snake(GraphicsContext gc) {
 		this(gc, 10);
 	}
-	
-	// returns the number of gained points
-	int move() {
-		int newX = head.getX() + OFFSETS[dir.ordinal()].offsetX;
-		int newY = head.getY() + OFFSETS[dir.ordinal()].offsetY;
+
+	void move(Field field) {
+		keyPressed = false;
+
+		int newX = (head.getX() + dir.offsetX() + Field.FIELD_WIDTH) % Field.FIELD_WIDTH;
+		int newY = (head.getY() + dir.offsetY() + Field.FIELD_HEIGHT) % Field.FIELD_HEIGHT;
 		
 		SnakeBlock newHead = new SnakeBlock(newX, newY);
 		head.next = newHead;
 		head = newHead;
-		
+
+		if (!mouthfull) {
+			tail.paint(gc, blockSize, Color.WHITE);
+		}
+		mouthfull = false;
 		head.paint(gc, blockSize, Color.BLACK);
-		tail.paint(gc, blockSize, Color.WHITE);
 		
 		tail = tail.next;
-		
-		return 0;
+
+		if (field.gameField[newY][newX] == 2) {
+			field.gameField[newY][newX] = 0;
+			mouthfull = true;
+			SnakeBlock newTail = new SnakeBlock(tail, tail.getX(), tail.getY());
+			tail = newTail;
+			field.generateFood();
+		}
 	}
 	
 	// returns true if the snake is able to move further
-	boolean isSafeToMove() {
-		int newX = head.getX() + OFFSETS[dir.ordinal()].offsetX;
-		int newY = head.getY() + OFFSETS[dir.ordinal()].offsetY;
+	boolean isSafeToMove(Field field) {
+		int newX = (head.getX() + dir.offsetX() + Field.FIELD_WIDTH) % Field.FIELD_WIDTH;
+		int newY = (head.getY() + dir.offsetY() + Field.FIELD_HEIGHT) % Field.FIELD_HEIGHT;
 
         // because on the next step tail block will move
         SnakeBlock block = tail.next;
         do {
-            if (newX == block.getX() && newY == block.getY()) {
+            if (newX == block.getX() && newY == block.getY() || field.gameField[newX][newY] == 1) {
                 return false;
             }
             block = block.next;
@@ -98,7 +108,7 @@ class Snake {
 
 	// changes the direction of the snake
 	void controlInp(KeyCode code) {
-		if (code.getCode() >= 37 && code.getCode() <= 40) {
+		if (code.getCode() >= 37 && code.getCode() <= 40 && !keyPressed) {
 			Direction newDir = null;
 			if (code == KeyCode.UP) {
 				newDir = Direction.UP;
@@ -110,9 +120,14 @@ class Snake {
 				newDir = Direction.LEFT;
 			}
 
-			if ((newDir.ordinal() - dir.ordinal() + 4) % 4 != 2) {
+			if (dir.ableToChange(newDir)) {
 				dir = newDir;
 			}
+			keyPressed = true;
 		}
+	}
+
+	SnakeBlock getTail() {
+		return tail;
 	}
 }
