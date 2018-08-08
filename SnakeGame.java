@@ -50,7 +50,11 @@ public class SnakeGame extends Application {
 		timer = new Timer();
 		timer.schedule( new TimerTask() {
 			public void run() {
-				snake.move();
+				if (snake.isSafeToMove()) {
+					snake.move();
+				} else {
+					timer.cancel();
+				}
 			}
 		}, 50, 50);
 	}
