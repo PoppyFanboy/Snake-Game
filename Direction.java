@@ -13,7 +13,7 @@ package poppyfanboy.snakegame;
  * @author PoppyFanboy
  */
 
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
 
 public class Direction {
     private int offsetX = 0;
@@ -41,6 +41,9 @@ public class Direction {
     // returns false if new direction is on the same
     // line as the old direction of a snake
     boolean ableToChange(Direction newDir) {
+        // this part may cause bugs if dir is initially negative
+        // but since dir field is encapsulated in Direction class
+        // its value is always non-negative and less than 4
         if ((dir - newDir.getDirInt() + 4) % 4 == 2) {
             return false;
         }
