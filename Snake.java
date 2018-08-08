@@ -39,7 +39,7 @@ class Snake {
 		
 		int initX = (int) gc.getCanvas().getWidth() / blockSize / 2;
 		int initY = (int) gc.getCanvas().getHeight() / blockSize / 2;
-		int initLength = 10;
+		int initLength = 20;
 		
 		head = new SnakeBlock(initX, initY);
 		head.paint(gc, blockSize, Color.BLACK);
@@ -77,6 +77,18 @@ class Snake {
 	
 	// returns true if the snake is able to move further
 	boolean isSafeToMove() {
+        int newX = head.getX() + dir.getOffsetX();
+        int newY = head.getY() + dir.getOffsetY();
+
+        // because on the next step tail block will move
+        SnakeBlock block = tail.next;
+        do {
+            if (newX == block.getX() && newY == block.getY()) {
+                return false;
+            }
+            block = block.next;
+        } while (block != null);
+
 		return true;
 	}
 	
