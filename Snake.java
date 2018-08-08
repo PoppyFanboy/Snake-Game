@@ -39,7 +39,7 @@ class Snake {
 		
 		int initX = (int) gc.getCanvas().getWidth() / blockSize / 2;
 		int initY = (int) gc.getCanvas().getHeight() / blockSize / 2;
-		int initLength = 20;
+		int initLength = (int) gc.getCanvas().getWidth() / blockSize / 5;
 		
 		head = new SnakeBlock(initX, initY);
 		head.paint(gc, blockSize, Color.BLACK);
@@ -91,7 +91,8 @@ class Snake {
 
 		return true;
 	}
-	
+
+	// changes the direction of the snake
 	void controlInp(KeyCode code) {
         Direction newDir = new Direction(code);
         if (dir.ableToChange(newDir)) {
