@@ -13,8 +13,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.*;
 
-import javafx.scene.layout.*;
-
 import javafx.event.*;
 import javafx.scene.input.*;
 import javafx.scene.canvas.*;
@@ -27,7 +25,7 @@ public class SnakeGame extends Application {
 	private static Timer timer;
 	
 	@Override
-	public void start(Stage stage) throws InterruptedException{
+	public void start(Stage stage) {
 		Group gameDisplayNode = new Group();
 		Scene scene = new Scene(gameDisplayNode, 640, 480);
 		

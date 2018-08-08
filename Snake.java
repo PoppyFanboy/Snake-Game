@@ -64,18 +64,17 @@ class Snake {
 		int newY = head.getY();
 		
 		switch (dir) {
-		switch (dir) {
-			case NORTH:	newY--;
-						break;
+			case 0:	newY--;
+					break;
 					
-			case EAST:	newX++;
-						break;
+			case 1:	newX++;
+					break;
 					
-			case SOUTH:	newY++;
-						break;
+			case 2:	newY++;
+					break;
 					
-			case WEST:	newX--;
-						break;
+			case 3:	newX--;
+					break;
 		}
 		
 		SnakeBlock newHead = new SnakeBlock(newX, newY);
