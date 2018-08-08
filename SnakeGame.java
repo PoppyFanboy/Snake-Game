@@ -1,13 +1,13 @@
 package poppyfanboy.snakegame;
 
 /**
-  * Classic game "Snake"
-  * Main class "SnakeGame"
-  * Implements GUI part of the application,
-  * conducts the main loop of the game session
-  *
-  * @author PoppyFanboy
-  */
+ * Classic game "Snake"
+ * Main class "SnakeGame"
+ * Implements GUI part of the application,
+ * conducts the main loop of the game session
+ *
+ * @author PoppyFanboy
+ */
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -41,7 +41,7 @@ public class SnakeGame extends Application {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent event) {
-				snake.changeDir(event.getCode());
+				snake.controlInp(event.getCode());
 			}
 		});
 		
