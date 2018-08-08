@@ -23,12 +23,9 @@ import javafx.scene.paint.*;
 
 import javafx.scene.input.KeyCode;
   
-enum Direction {
-	NORTH, EAST, SOUTH, WEST
-}
-  
 class Snake {
-	private Direction dir;
+	// 0 - North, 1 - East, 2 - South, 3 - West
+	private int dir;
 	
 	private SnakeBlock head;
 	private SnakeBlock tail;
@@ -54,7 +51,7 @@ class Snake {
 		}
 		tail = previous;
 		
-		dir = Direction.WEST;
+		dir = 3;
 	}
 	
 	Snake(GraphicsContext gc) {
@@ -67,17 +64,18 @@ class Snake {
 		int newY = head.getY();
 		
 		switch (dir) {
+		switch (dir) {
 			case NORTH:	newY--;
-					break;
+						break;
 					
 			case EAST:	newX++;
-					break;
+						break;
 					
 			case SOUTH:	newY++;
-					break;
+						break;
 					
 			case WEST:	newX--;
-					break;
+						break;
 		}
 		
 		SnakeBlock newHead = new SnakeBlock(newX, newY);
@@ -99,13 +97,13 @@ class Snake {
 	
 	void changeDir(KeyCode code) {
 		if (code == KeyCode.UP) {
-			dir = Direction.NORTH;
-		} else if (code == KeyCode.DOWN) {
-			dir = Direction.SOUTH;
-		} else if (code == KeyCode.LEFT) {
-			dir = Direction.WEST;
+			dir = 0;
 		} else if (code == KeyCode.RIGHT) {
-			dir = Direction.EAST;
-		}
+			dir = 1;
+		} else if (code == KeyCode.DOWN) {
+			dir = 2;
+		} else if (code == KeyCode.LEFT) {
+			dir = 3;
+		} 
 	}
 }
