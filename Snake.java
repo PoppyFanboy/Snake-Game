@@ -1,22 +1,22 @@
 package poppyfanboy.snakegame;
 
 /**
-  * Class "Snake"
-  * The class is used to represent a whole
-  * snake from a classic game
-  *
-  * The snake stores:
-  * - references to its "head" and "tail"
-  *   represented as instances of "SnakeBlock" class
-  * - its current direction (as a enumeration)
-  *
-  * "Snake" class provides methods for:
-  * - moving the snake in the direction stated in "dir" field
-  * - checking whether it is possible for the snake to move
-  *   (if the snake meets its own body)
-  *
-  * @author PoppyFanboy
-  */
+ * Class "Snake"
+ * The class is used to represent a whole
+ * snake from a classic game
+ *
+ * The snake stores:
+ * - references to its "head" and "tail"
+ *   represented as instances of "SnakeBlock" class
+ * - its current direction (as a enumeration)
+ *
+ * "Snake" class provides methods for:
+ * - moving the snake in the direction stated in "dir" field
+ * - checking whether it is possible for the snake to move
+ *   (if the snake meets its own body)
+ *
+ * @author PoppyFanboy
+ */
   
 import javafx.scene.canvas.*;
 import javafx.scene.paint.*;
@@ -25,7 +25,7 @@ import javafx.scene.input.KeyCode;
   
 class Snake {
 	// 0 - North, 1 - East, 2 - South, 3 - West
-	private int dir;
+	private Direction dir;
 	
 	private SnakeBlock head;
 	private SnakeBlock tail;
@@ -51,7 +51,7 @@ class Snake {
 		}
 		tail = previous;
 		
-		dir = 3;
+		dir = new Direction(KeyCode.LEFT);
 	}
 	
 	Snake(GraphicsContext gc) {
@@ -60,22 +60,8 @@ class Snake {
 	
 	// returns the number of gained points
 	int move() {
-		int newX = head.getX();
-		int newY = head.getY();
-		
-		switch (dir) {
-			case 0:	newY--;
-					break;
-					
-			case 1:	newX++;
-					break;
-					
-			case 2:	newY++;
-					break;
-					
-			case 3:	newX--;
-					break;
-		}
+		int newX = head.getX() + dir.getOffsetX();
+		int newY = head.getY() + dir.getOffsetY();
 		
 		SnakeBlock newHead = new SnakeBlock(newX, newY);
 		head.next = newHead;
@@ -90,19 +76,14 @@ class Snake {
 	}
 	
 	// returns true if the snake is able to move further
-	boolean isSafe() {
+	boolean isSafeToMove() {
 		return true;
 	}
 	
-	void changeDir(KeyCode code) {
-		if (code == KeyCode.UP) {
-			dir = 0;
-		} else if (code == KeyCode.RIGHT) {
-			dir = 1;
-		} else if (code == KeyCode.DOWN) {
-			dir = 2;
-		} else if (code == KeyCode.LEFT) {
-			dir = 3;
-		} 
+	void controlInp(KeyCode code) {
+        Direction newDir = new Direction(code);
+        if (dir.ableToChange(newDir)) {
+            dir = newDir;
+        }
 	}
 }
