@@ -22,11 +22,15 @@ import javafx.scene.canvas.*;
 import javafx.scene.paint.*;
 
 import javafx.scene.input.KeyCode;
-  
+
+enum Direction { UP, RIGHT, DOWN, LEFT };
+
 class Snake {
-	// 0 - North, 1 - East, 2 - South, 3 - West
+	// same order as in the Direction enum
+	private static final Offset[] OFFSETS = { new Offset(0, -1), new Offset(1, 0),
+			                                  new Offset(0, 1),  new Offset(-1, 0)};
+
 	private Direction dir;
-	
 	private SnakeBlock head;
 	private SnakeBlock tail;
 	
@@ -51,7 +55,7 @@ class Snake {
 		}
 		tail = previous;
 		
-		dir = new Direction(KeyCode.LEFT);
+		dir = Direction.LEFT;
 	}
 	
 	Snake(GraphicsContext gc) {
@@ -60,8 +64,8 @@ class Snake {
 	
 	// returns the number of gained points
 	int move() {
-		int newX = head.getX() + dir.getOffsetX();
-		int newY = head.getY() + dir.getOffsetY();
+		int newX = head.getX() + OFFSETS[dir.ordinal()].offsetX;
+		int newY = head.getY() + OFFSETS[dir.ordinal()].offsetY;
 		
 		SnakeBlock newHead = new SnakeBlock(newX, newY);
 		head.next = newHead;
@@ -77,8 +81,8 @@ class Snake {
 	
 	// returns true if the snake is able to move further
 	boolean isSafeToMove() {
-        int newX = head.getX() + dir.getOffsetX();
-        int newY = head.getY() + dir.getOffsetY();
+		int newX = head.getX() + OFFSETS[dir.ordinal()].offsetX;
+		int newY = head.getY() + OFFSETS[dir.ordinal()].offsetY;
 
         // because on the next step tail block will move
         SnakeBlock block = tail.next;
@@ -94,9 +98,21 @@ class Snake {
 
 	// changes the direction of the snake
 	void controlInp(KeyCode code) {
-        Direction newDir = new Direction(code);
-        if (dir.ableToChange(newDir)) {
-            dir = newDir;
-        }
+		if (code.getCode() >= 37 && code.getCode() <= 40) {
+			Direction newDir = null;
+			if (code == KeyCode.UP) {
+				newDir = Direction.UP;
+			} else if (code == KeyCode.RIGHT) {
+				newDir = Direction.RIGHT;
+			} else if (code == KeyCode.DOWN) {
+				newDir = Direction.DOWN;
+			} else if (code == KeyCode.LEFT) {
+				newDir = Direction.LEFT;
+			}
+
+			if ((newDir.ordinal() - dir.ordinal() + 4) % 4 != 2) {
+				dir = newDir;
+			}
+		}
 	}
 }
