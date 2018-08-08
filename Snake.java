@@ -20,6 +20,8 @@ package poppyfanboy.snakegame;
   
 import javafx.scene.canvas.*;
 import javafx.scene.paint.*;
+
+import javafx.scene.input.KeyCode;
   
 enum Direction {
 	NORTH, EAST, SOUTH, WEST
@@ -95,7 +97,15 @@ class Snake {
 		return true;
 	}
 	
-	void setDir(Direction dir) {
-		this.dir = dir;
+	void changeDir(KeyCode code) {
+		if (code == KeyCode.UP) {
+			dir = Direction.NORTH;
+		} else if (code == KeyCode.DOWN) {
+			dir = Direction.SOUTH;
+		} else if (code == KeyCode.LEFT) {
+			dir = Direction.WEST;
+		} else if (code == KeyCode.RIGHT) {
+			dir = Direction.EAST;
+		}
 	}
 }
