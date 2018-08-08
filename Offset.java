@@ -4,13 +4,15 @@ package poppyfanboy.snakegame;
  * Class "Offset"
  * A simple class that allows to store offsets of
  * the coordinates by x and y axises simultaneously
+ *
+ * @author PoppyFanboy
  */
 
-public class Offset {
-    public int offsetX;
-    public int offsetY;
+class Offset {
+    int offsetX;
+    int offsetY;
 
-    public Offset(int x, int y) {
+    Offset(int x, int y) {
         this.offsetX = x;
         this.offsetY = y;
     }
