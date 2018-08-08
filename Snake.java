@@ -28,7 +28,7 @@ enum Direction { UP, RIGHT, DOWN, LEFT };
 class Snake {
 	// same order as in the Direction enum
 	private static final Offset[] OFFSETS = { new Offset(0, -1), new Offset(1, 0),
-			                                  new Offset(0, 1),  new Offset(-1, 0)};
+			                          new Offset(0, 1),  new Offset(-1, 0)};
 
 	private Direction dir;
 	private SnakeBlock head;
