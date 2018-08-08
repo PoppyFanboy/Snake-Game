@@ -12,35 +12,15 @@ package poppyfanboy.snakegame;
  * @author PoppyFanboy
  */
   
-import javafx.scene.canvas.*;
-import javafx.scene.paint.*;
-  
-class SnakeBlock {
+class SnakeBlock extends Block{
 	SnakeBlock next = null;
-  
-	private int x = 0;
-	private int y = 0;
 	
 	SnakeBlock(SnakeBlock next, int x, int y) {
-		this(x, y);
+		super(x, y);
 		this.next = next;		
 	}
-	
+
 	SnakeBlock(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-	
-	void paint(GraphicsContext gc, int blockSize, Color color) {
-		gc.setFill(color);
-		gc.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
-	}
-	
-	int getX() {
-		return x;
-	}
-	
-	int getY() {
-		return y;
+		super(x, y);
 	}
 }
