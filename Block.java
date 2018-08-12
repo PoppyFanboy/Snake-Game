@@ -22,7 +22,7 @@ public class Block {
 
     void paint(GraphicsContext gc, int blockSize, Color color) {
         gc.setFill(color);
-        gc.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
+        gc.fillRect(x * blockSize + 1, y * blockSize + 1, blockSize - 1, blockSize - 1);
     }
 
     int getX() {
