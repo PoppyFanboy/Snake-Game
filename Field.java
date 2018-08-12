@@ -39,7 +39,7 @@ public class Field {
             for (int j = 0; j < FIELD_WIDTH; j++) {
                 if (this.gameField[i][j] == 1) {
                     gc.setFill(Color.DARKGRAY);
-                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
+                    gc.fillRect(j * blockSize + 1, i * blockSize + 1, blockSize - 1, blockSize - 1);
                 }
             }
         }
@@ -49,7 +49,6 @@ public class Field {
 
     // returns false if (x,y) coordinate belongs to the snake
     boolean checkSnakeCollision(int x, int y) {
-        System.out.println(x + " -- " + y);
         SnakeBlock block = snake.getTail();
         do {
             if (block.getX() == x && block.getY() == y) {
@@ -74,7 +73,7 @@ public class Field {
         int foodY = randomCell / FIELD_WIDTH;
         gameField[foodY][foodX] = 2;
         gc.setFill(Color.GREEN);
-        gc.fillRect(foodX * blockSize, foodY * blockSize, blockSize, blockSize);
+        gc.fillRect(foodX * blockSize + 1, foodY * blockSize + 1, blockSize - 1, blockSize - 1);
 
         return true;
     }
