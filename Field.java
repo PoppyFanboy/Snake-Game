@@ -39,7 +39,7 @@ public class Field {
             for (int j = 0; j < FIELD_WIDTH; j++) {
                 if (this.gameField[i][j] == 1) {
                     gc.setFill(Color.DARKGRAY);
-                    gc.fillRect(j * blockSize + 1, i * blockSize + 1, blockSize - 1, blockSize - 1);
+                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
                 }
             }
         }
@@ -73,7 +73,7 @@ public class Field {
         int foodY = randomCell / FIELD_WIDTH;
         gameField[foodY][foodX] = 2;
         gc.setFill(Color.GREEN);
-        gc.fillRect(foodX * blockSize + 1, foodY * blockSize + 1, blockSize - 1, blockSize - 1);
+        gc.fillRect(foodX * blockSize + 4, foodY * blockSize + 4, blockSize - 8, blockSize - 8);
 
         return true;
     }
