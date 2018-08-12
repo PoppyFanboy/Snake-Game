@@ -17,6 +17,9 @@ import javafx.scene.shape.*;
 import javafx.scene.paint.*;
 import javafx.scene.canvas.*;
 
+import javafx.scene.control.*;
+import javafx.scene.text.*;
+
 import javafx.event.*;
 import javafx.scene.input.*;
 
@@ -26,6 +29,9 @@ public class SnakeGame extends Application {
 	private static Snake snake;
 	private static Timer timer;
 	private static Field field;
+
+	private static TextArea pointsField;
+	private static int points;
 
 	// GAME_WIDTH/HEIGHT are sizes of the game field in pixels
 	public static final int WINDOW_WIDTH = 1024;
@@ -58,14 +64,27 @@ public class SnakeGame extends Application {
 	// creates instances of Snake and Field classes
 	private static void startGame(Pane pane) {
 		GraphicsContext gc = createGameField(pane);
+		gc.setFill(Color.WHITE);
+		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 		snake = new Snake(gc, GAME_WIDTH / Field.FIELD_WIDTH);
 		field = new Field(gc, new int[Field.FIELD_HEIGHT][Field.FIELD_WIDTH], snake);
+
+		int points = 0;
+		pointsField = new TextArea("Points:\n0");
+		pointsField.setPrefWidth((WINDOW_WIDTH - GAME_WIDTH) / 2 - 30);
+		pointsField.setWrapText(true);
+		pointsField.setEditable(false);
+		pointsField.setFont(Font.font("Monospaced", FontWeight.BOLD, 20));
+		pointsField.setLayoutX((WINDOW_WIDTH + GAME_WIDTH) / 2 + 20);
+        pointsField.setLayoutY((WINDOW_HEIGHT - GAME_HEIGHT) / 2);
+        pane.getChildren().add(pointsField);
 
 		timer = new Timer();
 		timer.schedule( new TimerTask() {
 			public void run() {
 				if (snake.isSafeToMove(field)) {
-					snake.move(field);
+					SnakeGame.points += snake.move(field);
+					pointsField.setText("Points: " + SnakeGame.points);
 				} else {
 					timer.cancel();
 				}
