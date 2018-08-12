@@ -43,7 +43,7 @@ class Snake {
 		
 		int initX = (int) gc.getCanvas().getWidth() / blockSize / 2;
 		int initY = (int) gc.getCanvas().getHeight() / blockSize / 2;
-		int initLength = 50;
+		int initLength = 5;
 		
 		head = new SnakeBlock(initX, initY);
 		head.paint(gc, blockSize, Color.BLACK);
@@ -62,8 +62,9 @@ class Snake {
 		this(gc, 10);
 	}
 
-	void move(Field field) {
+	int move(Field field) {
 		keyPressed = false;
+		int earnedPoints = 0;
 
 		int newX = (head.getX() + dir.offsetX() + Field.FIELD_WIDTH) % Field.FIELD_WIDTH;
 		int newY = (head.getY() + dir.offsetY() + Field.FIELD_HEIGHT) % Field.FIELD_HEIGHT;
@@ -81,12 +82,15 @@ class Snake {
 		tail = tail.next;
 
 		if (field.gameField[newY][newX] == 2) {
+			earnedPoints = 10;
 			field.gameField[newY][newX] = 0;
 			mouthfull = true;
 			SnakeBlock newTail = new SnakeBlock(tail, tail.getX(), tail.getY());
 			tail = newTail;
 			field.generateFood();
 		}
+
+		return earnedPoints;
 	}
 	
 	// returns true if the snake is able to move further
