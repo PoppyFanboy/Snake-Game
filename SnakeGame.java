@@ -90,10 +90,12 @@ public class SnakeGame extends Application {
 						case INITIALIZATION:
 							gameState = GameState.PAUSE;
 							pauseField.setFill(Color.RED);
+							timer.purge();
 							break;
 						case PAUSE:
 							gameState = GameState.INITIALIZATION;
 							pauseField.setFill(Color.TRANSPARENT);
+							timer.schedule(new GameLoop(), UPDATE_INTERVAL / 1000000L, UPDATE_INTERVAL / 1000000L);
 							break;
 					}
 
@@ -155,20 +157,7 @@ public class SnakeGame extends Application {
 		pane.getChildren().add(pauseField);
 
 		timer = new Timer();
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				if (gameState == GameState.INITIALIZATION) {
-					timeBuffer = 1000000000L / speed;
-					updateSnake(0);
-					gameState = GameState.ON;
-				} else if (gameState == GameState.ON) {
-					updateSnake(System.nanoTime() - lastMove);
-				}
-
-				lastMove = System.nanoTime();
-			}
-		}, UPDATE_INTERVAL / 1000000L, UPDATE_INTERVAL / 1000000L);
+		timer.schedule(new GameLoop(), UPDATE_INTERVAL / 1000000L, UPDATE_INTERVAL / 1000000L);
 	}
 
 	// updates the state of the snake according to time
@@ -205,8 +194,8 @@ public class SnakeGame extends Application {
 		canvas.setLayoutY((WINDOW_HEIGHT - GAME_HEIGHT) / 2);
 
 		Rectangle border = new Rectangle((WINDOW_WIDTH - GAME_WIDTH) / 2,
-				(WINDOW_HEIGHT - GAME_HEIGHT) / 2,
-				GAME_WIDTH, GAME_HEIGHT);
+				                         (WINDOW_HEIGHT - GAME_HEIGHT) / 2,
+				                         GAME_WIDTH, GAME_HEIGHT);
 		border.setFill(Color.TRANSPARENT);
 		border.setStroke(Color.BLACK);
 		pane.getChildren().add(border);
@@ -229,6 +218,21 @@ public class SnakeGame extends Application {
 					stage.close();
 				}
 			}
+		}
+	}
+
+	static class GameLoop extends TimerTask {
+		@Override
+		public void run() {
+			if (gameState == GameState.INITIALIZATION) {
+				timeBuffer = 1000000000L / speed;
+				updateSnake(0);
+				gameState = GameState.ON;
+			} else if (gameState == GameState.ON) {
+				updateSnake(System.nanoTime() - lastMove);
+			}
+
+			lastMove = System.nanoTime();
 		}
 	}
 }
