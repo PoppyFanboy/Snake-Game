@@ -40,20 +40,20 @@ public class SnakeGame extends Application {
 	private static Stage stage;
 
 	private static Text pointsField = new Text("Points: 0");
-	private static Text speedField = new Text("Speed: 5/100");
+	private static Text speedField = new Text("Speed: 1.000");
 	private static Text pauseField = new Text("GAME PAUSED");
 
 	private static int points = 0;
-	// movements of snake per second
-	private static int speed = 5;
+	// time needed for a snake to make exactly one movement (in seconds)
+	private static double speed = 1.0;
 	// an indicator of buffer time available
-	// for performing movement of a snake in nanoseconds
-	private static long timeBuffer = 0;
-	// point of time in nanoseconds when last sequence
+	// for performing movement of a snake in seconds
+	private static double timeBuffer = 0.0;
+	// point of time in seconds when last sequence
 	// of movements was performed
-	private static long lastMove = 0;
+	private static double lastMove = 0.0;
 	// time passed after last increment of speed
-	private static long lastSpeedUp = 0;
+	private static double lastSpeedUp = 0.0;
 
 	private static GameState gameState = GameState.OFF;
 
@@ -64,9 +64,9 @@ public class SnakeGame extends Application {
 	public static final int GAME_HEIGHT = 600;
 
 	// 5 milliseconds
-	public static final long UPDATE_INTERVAL = 5000000L;
+	public static final double UPDATE_INTERVAL = 0.005;
 	// 5 seconds
-	public static final long SPEED_UP_INTERVAL = 1000000000L * 5;
+	public static final double SPEED_UP_INTERVAL = 5.0;
 
 	@Override
 	public void start(Stage stage) {
@@ -95,7 +95,8 @@ public class SnakeGame extends Application {
 						case PAUSE:
 							gameState = GameState.INITIALIZATION;
 							pauseField.setFill(Color.TRANSPARENT);
-							timer.schedule(new GameLoop(), UPDATE_INTERVAL / 1000000L, UPDATE_INTERVAL / 1000000L);
+							timer.schedule(new GameLoop(), (long) (1e3 * UPDATE_INTERVAL),
+									(long) (1e3 * UPDATE_INTERVAL));
 							break;
 					}
 
@@ -157,31 +158,32 @@ public class SnakeGame extends Application {
 		pane.getChildren().add(pauseField);
 
 		timer = new Timer();
-		timer.schedule(new GameLoop(), UPDATE_INTERVAL / 1000000L, UPDATE_INTERVAL / 1000000L);
+		timer.schedule(new GameLoop(), (long) (1e3 * UPDATE_INTERVAL),
+				(long) (1e3 * UPDATE_INTERVAL));
 	}
 
 	// updates the state of the snake according to time
 	// elapsed since last call of updateSnake method
-	private static void updateSnake(long elapsedTime) {
+	private static void updateSnake(double elapsedTime) {
 		timeBuffer += elapsedTime;
 		lastSpeedUp += elapsedTime;
 
-		if (lastSpeedUp >= SPEED_UP_INTERVAL) {
-			lastSpeedUp = 0;
-			if (speed < 100) {
-				speed++;
-				speedField.setText("Speed:  " + SnakeGame.speed + "/100");
-			}
-		}
-
-		while (timeBuffer >= 1000000000L / speed) {
+		while (timeBuffer >= speed) {
 			if (snake.isSafeToMove(field)) {
 				SnakeGame.points += snake.move(field);
 				pointsField.setText("Points: " + SnakeGame.points);
 			} else {
 				timer.cancel();
 			}
-			timeBuffer -= 1000000000L / speed;
+			timeBuffer -= speed;
+		}
+
+		if (lastSpeedUp >= SPEED_UP_INTERVAL) {
+			lastSpeedUp = 0;
+			if (speed >= 0.025) {
+				speed = speed * 0.75;
+				speedField.setText(String.format("Speed:  %.2f", SnakeGame.speed));
+			}
 		}
 	}
 
@@ -224,15 +226,16 @@ public class SnakeGame extends Application {
 	static class GameLoop extends TimerTask {
 		@Override
 		public void run() {
+			double currentTime = System.nanoTime() / 1e9;
 			if (gameState == GameState.INITIALIZATION) {
-				timeBuffer = 1000000000L / speed;
+				timeBuffer = 0;
 				updateSnake(0);
 				gameState = GameState.ON;
 			} else if (gameState == GameState.ON) {
-				updateSnake(System.nanoTime() - lastMove);
+				updateSnake(currentTime - lastMove);
 			}
 
-			lastMove = System.nanoTime();
+			lastMove = currentTime;
 		}
 	}
 }
