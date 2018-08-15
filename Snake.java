@@ -112,7 +112,8 @@ class Snake {
 
 	// changes the direction of the snake
 	void controlInp(KeyCode code) {
-		if (code.getCode() >= 37 && code.getCode() <= 40 && !keyPressed) {
+		if ((code == KeyCode.UP || code == KeyCode.DOWN || code == KeyCode.RIGHT ||
+				code == KeyCode.LEFT) && !keyPressed) {
 			Direction newDir = null;
 			if (code == KeyCode.UP) {
 				newDir = Direction.UP;
