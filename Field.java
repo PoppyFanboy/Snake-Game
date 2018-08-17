@@ -28,7 +28,7 @@ public class Field {
         this.gc = gc;
         this.snake = snake;
 
-        blockSize = SnakeGame.GAME_WIDTH / Field.FIELD_WIDTH;
+        blockSize = GUIPart.GAME_WIDTH / Field.FIELD_WIDTH;
 
         // copying array
         for (int i = 0; i < Math.min(gameField.length, FIELD_HEIGHT); i++) {

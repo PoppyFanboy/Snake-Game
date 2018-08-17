@@ -12,7 +12,7 @@ enum Direction {
     UP, RIGHT, DOWN, LEFT;
 
     private static final Offset[] OFFSETS = { new Offset(0, -1), new Offset(1, 0),
-                                              new Offset(0, 1),  new Offset(-1, 0)};
+                                              new Offset(0, 1),  new Offset(-1, 0) };
 
     int offsetX() {
         return OFFSETS[this.ordinal()].offsetX;
