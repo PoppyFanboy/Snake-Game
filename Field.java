@@ -14,8 +14,8 @@ import javafx.scene.paint.Color;
 import java.util.*;
 
 public class Field {
-    static final int FIELD_WIDTH = 30;
-    static final int FIELD_HEIGHT = 30;
+    static final int FIELD_WIDTH = 15;
+    static final int FIELD_HEIGHT = 15;
 
     private int blockSize = 10;
     private GraphicsContext gc;
@@ -73,7 +73,7 @@ public class Field {
         int foodY = randomCell / FIELD_WIDTH;
         gameField[foodY][foodX] = 2;
         gc.setFill(Color.GREEN);
-        gc.fillRect(foodX * blockSize + 4, foodY * blockSize + 4, blockSize - 8, blockSize - 8);
+        gc.fillRect(foodX * blockSize + blockSize * 0.3, foodY * blockSize + blockSize * 0.3, blockSize * 0.4, blockSize * 0.4);
 
         return true;
     }

@@ -18,6 +18,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 // GUI (general stuff)
 import javafx.application.Application;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -27,10 +28,10 @@ public class GUIPart extends Application {
     private Stage stage;
     private static SnakeGame game;
 
-    public static final int WINDOW_WIDTH = 1024;
-    public static final int WINDOW_HEIGHT = 768;
-    public static final int GAME_WIDTH = 600;
-    public static final int GAME_HEIGHT = 600;
+    public static final int WINDOW_WIDTH = 640;
+    public static final int WINDOW_HEIGHT = 480;
+    public static final int GAME_WIDTH = 405;
+    public static final int GAME_HEIGHT = 405;
 
     public void start(Stage aStage) {
         stage = aStage;
@@ -40,7 +41,8 @@ public class GUIPart extends Application {
         Scene scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
 
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+        
+        stage.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 game.handleKey(event.getCode());
@@ -50,16 +52,16 @@ public class GUIPart extends Application {
         MenuBar menuBar = new MenuBar();
         final Menu menu1 = new Menu("Game");
         final Menu menu2 = new Menu("Reference");
-
+        
+        menu1.setOnAction(new MenuActionHandler());
+        menu2.setOnAction(new MenuActionHandler());
+        
         MenuItem menuNewGame = new MenuItem("New Game");
         MenuItem menuScore = new MenuItem("Scoreboard");
         MenuItem menuParam = new MenuItem("Parameters");
         MenuItem menuExit = new MenuItem("Exit");
-        menuExit.setOnAction(new MenuActionHandler());
-        menuNewGame.setOnAction(new MenuActionHandler());
 
-        menu1.getItems().addAll(menuNewGame, new SeparatorMenuItem(), menuScore,
-                menuParam, new SeparatorMenuItem(), menuExit);
+        menu1.getItems().addAll(menuNewGame, new SeparatorMenuItem(), menuScore, menuParam, new SeparatorMenuItem(), menuExit);
 
         MenuItem menuReference = new MenuItem("Show Reference");
         MenuItem menuAbout = new MenuItem("About");
@@ -80,6 +82,7 @@ public class GUIPart extends Application {
     class MenuActionHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(ActionEvent mouseEvent) {
+            game.pause(false);
             if (mouseEvent.getTarget() instanceof MenuItem) {
                 MenuItem target = (MenuItem) mouseEvent.getTarget();
                 if (target.getText() == "Exit") {
