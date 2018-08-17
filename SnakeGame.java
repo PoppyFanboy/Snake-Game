@@ -1,6 +1,8 @@
 package poppyfanboy.snakegame;
 
 /**
+ * Class "Snake Game"
+ *
  * Classic game "Snake"
  * Conducts the main loop of the game session,
  * paints the snake, food, walls of the labyrinth, points and speed
@@ -68,8 +70,7 @@ public class SnakeGame {
 		canvas.setLayoutX((WINDOW_WIDTH - GAME_WIDTH) / 2.0);
 		canvas.setLayoutY((WINDOW_HEIGHT - GAME_HEIGHT) / 2.0);
 
-		Rectangle border = new Rectangle(	(WINDOW_WIDTH - GAME_WIDTH) / 2.0, (WINDOW_HEIGHT - GAME_HEIGHT) / 2.0,
-											GAME_WIDTH, GAME_HEIGHT	);
+		Rectangle border = new Rectangle((WINDOW_WIDTH - GAME_WIDTH) / 2.0, (WINDOW_HEIGHT - GAME_HEIGHT) / 2.0, GAME_WIDTH, GAME_HEIGHT);
 		border.setFill(Color.TRANSPARENT);
 		border.setStroke(Color.BLACK);
 		pane.getChildren().add(border);
@@ -116,9 +117,7 @@ public class SnakeGame {
 		lastMove = 0.0;
 		lastSpeedUp = 0.0;
 	}
-
-	// starts new game, creates game window on the Pane,
-	// creates instances of Snake and Field classes
+	
 	public void start() {
 		setDefaultSettings();
 		gameState = GameState.INITIALIZATION;
