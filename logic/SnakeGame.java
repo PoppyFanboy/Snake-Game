@@ -1,4 +1,4 @@
-package poppyfanboy.snakegame;
+package poppyfanboy.snakegame.logic;
 
 /**
  * Class "Snake Game"
@@ -22,10 +22,10 @@ import javafx.scene.input.*;
 
 import java.util.*;
 
-import static poppyfanboy.snakegame.GUIPart.GAME_HEIGHT;
-import static poppyfanboy.snakegame.GUIPart.GAME_WIDTH;
-import static poppyfanboy.snakegame.GUIPart.WINDOW_HEIGHT;
-import static poppyfanboy.snakegame.GUIPart.WINDOW_WIDTH;
+import static poppyfanboy.snakegame.Main.GAME_HEIGHT;
+import static poppyfanboy.snakegame.Main.GAME_WIDTH;
+import static poppyfanboy.snakegame.Main.WINDOW_HEIGHT;
+import static poppyfanboy.snakegame.Main.WINDOW_WIDTH;
 
 // Current state of the game session
 // "INITIALIZATION" state - first step of a snake

@@ -1,4 +1,4 @@
-package poppyfanboy.snakegame;
+package poppyfanboy.snakegame.logic;
 
 /**
  * Class "Field"
@@ -10,6 +10,7 @@ package poppyfanboy.snakegame;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import poppyfanboy.snakegame.Main;
 
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class Field {
         this.gc = gc;
         this.snake = snake;
 
-        blockSize = GUIPart.GAME_WIDTH / Field.FIELD_WIDTH;
+        blockSize = Main.GAME_WIDTH / Field.FIELD_WIDTH;
 
         // copying array
         for (int i = 0; i < Math.min(gameField.length, FIELD_HEIGHT); i++) {

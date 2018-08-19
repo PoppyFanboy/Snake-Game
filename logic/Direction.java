@@ -1,4 +1,4 @@
-package poppyfanboy.snakegame;
+package poppyfanboy.snakegame.logic;
 
 /**
  * Enumeration "Direction"
