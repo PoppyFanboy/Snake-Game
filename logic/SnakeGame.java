@@ -184,7 +184,7 @@ public class SnakeGame {
 		}
 	}
 
-	void handleKey(KeyCode code) {
+	public void handleKey(KeyCode code) {
 		if (gameState != GameState.OFF) {
 			snake.controlInp(code);
 			if (code == KeyCode.P) {

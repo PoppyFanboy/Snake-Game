@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import poppyfanboy.snakegame.Main?>
+
+<Scene  xmlns = "http://javafx.com/javafx"
+        xmlns:fx = "http://javafx.com/fxml"
+        fx:controller = "poppyfanboy.snakegame.gui.GameWindowController"
+        fx:id="gameScene">
+    <width>
+        <Main fx:constant = "WINDOW_WIDTH"/>
+    </width>
+
+    <height>
+        <Main fx:constant = "WINDOW_HEIGHT"/>
+    </height>
+
+    <Pane fx:id = "gamePane">
+        <children>
+                <MenuBar fx:id = "menuBar">
+                    <Menu fx:id = "menu1" text = "Game">
+                        <MenuItem fx:id = "menuNewGame" text = "New Game" onAction = "#newGame"/>
+                        <MenuItem fx:id = "menuPause" text = "Pause (P)" onAction = "#pause"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem fx:id = "menuScore" text = "Scoreboard" onAction = "#openScoreboard"/>
+                        <MenuItem fx:id = "menuParam" text = "Parameters"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem fx:id = "menuExit" text = "Exit" onAction = "#exit"/>
+                    </Menu>
+
+                    <Menu fx:id = "menu2" text = "Reference">
+                        <MenuItem fx:id = "menuReference" text = "Show Reference"/>
+                        <SeparatorMenuItem/>
+                        <MenuItem fx:id = "menuAbout" text = "About"/>
+                    </Menu>
+                </MenuBar>
+        </children>
+    </Pane>
+</Scene>
