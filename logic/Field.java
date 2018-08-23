@@ -65,6 +65,8 @@ public class Field {
     boolean generateFood() {
         int randomCell = (int) (FIELD_WIDTH * FIELD_HEIGHT * Math.random());
 
+        // я забыл тут добавить проверку границ
+        // только сейчас всплыл баг
         while (gameField[randomCell / FIELD_HEIGHT][randomCell % FIELD_WIDTH] != 0 ||
                checkSnakeCollision(randomCell % FIELD_WIDTH, randomCell / FIELD_HEIGHT)) {
             randomCell++;

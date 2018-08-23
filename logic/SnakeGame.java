@@ -11,6 +11,11 @@ package poppyfanboy.snakegame.logic;
  * @author PoppyFanboy
  */
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -19,13 +24,16 @@ import javafx.scene.layout.*;
 import javafx.scene.canvas.*;
 import javafx.scene.text.*;
 import javafx.scene.input.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-import java.util.*;
+import javafx.event.*;
+import javafx.util.Duration;
 
-import static poppyfanboy.snakegame.Main.GAME_HEIGHT;
-import static poppyfanboy.snakegame.Main.GAME_WIDTH;
-import static poppyfanboy.snakegame.Main.WINDOW_HEIGHT;
-import static poppyfanboy.snakegame.Main.WINDOW_WIDTH;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import static poppyfanboy.snakegame.Main.*;
 
 // Current state of the game session
 // "INITIALIZATION" state - first step of a snake
@@ -34,10 +42,12 @@ enum GameState { OFF, ON, PAUSE, INITIALIZATION }
 
 public class SnakeGame {
 	private Snake snake;
-	private Timer timer;
+	private Timeline timer;
 	private Field field;
 
 	private GraphicsContext gc;
+	private Stage gameWindow;
+	private Stage newHighscoreWindow;
 
 	private Text pointsField;
 	private Text speedField;
@@ -64,7 +74,28 @@ public class SnakeGame {
 	public static final double SPEED_UP_INTERVAL = 20.0;
 
 	public SnakeGame(Pane pane) {
-		// initializing all the GUI stuff
+		//initializing all the GUI stuff
+        gameWindow = (Stage) pane.getScene().getWindow();
+
+        newHighscoreWindow = new Stage();
+        newHighscoreWindow.setTitle("New Highscore!");
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLNewHighscoreWindow.fxml");
+            Scene scene = (Scene) loader.load(fxmlStream);
+            newHighscoreWindow.setScene(scene);
+
+            // modality
+            newHighscoreWindow.initOwner(gameWindow);
+            newHighscoreWindow.initModality(Modality.APPLICATION_MODAL);
+            //newHighscoreWindow.showAndWait();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            newHighscoreWindow.close();
+            return;
+        }
+
 		Canvas canvas = new Canvas(GAME_WIDTH, GAME_HEIGHT);
 		pane.getChildren().add(canvas);
 		canvas.setLayoutX((WINDOW_WIDTH - GAME_WIDTH) / 2.0);
@@ -125,14 +156,17 @@ public class SnakeGame {
 		snake = new Snake(gc, GAME_WIDTH / Field.FIELD_WIDTH);
 		field = new Field(gc, new int[Field.FIELD_HEIGHT][Field.FIELD_WIDTH], snake);
 
-		timer = new Timer();
-		timer.schedule(new GameLoop(), (long) (1e3 * UPDATE_INTERVAL), (long) (1e3 * UPDATE_INTERVAL));
+		timer = new Timeline(new KeyFrame(Duration.millis((long) (1e3 * UPDATE_INTERVAL)), new GameLoop()));
+		timer.setCycleCount(Timeline.INDEFINITE);
+		timer.play();
+		//timer.schedule(new GameLoop(), (long) (1e3 * UPDATE_INTERVAL), (long) (1e3 * UPDATE_INTERVAL));
 	}
 
 	public void stop() {
 		if (gameState != GameState.OFF) {
-			timer.cancel();
+			timer.stop();
 			gameState = GameState.OFF;
+            newHighscoreWindow.show();
 		}
 	}
 	
@@ -141,14 +175,14 @@ public class SnakeGame {
 			case ON: case INITIALIZATION:
 				gameState = GameState.PAUSE;
 				pauseField.setFill(Color.RED);
-				timer.purge();
+				timer.pause();
 				break;
 				
 			case PAUSE:
 				if (toggle) {
 					gameState = GameState.INITIALIZATION;
 					pauseField.setFill(Color.TRANSPARENT);
-					timer.schedule(new SnakeGame.GameLoop(), (long) (1e3 * UPDATE_INTERVAL), (long) (1e3 * UPDATE_INTERVAL));
+                    timer.play();
 				}
 				break;
 		}
@@ -193,9 +227,9 @@ public class SnakeGame {
 		}
 	}
 
-	class GameLoop extends TimerTask {
+	class GameLoop implements EventHandler<ActionEvent> {
 		@Override
-		public void run() {
+		public void handle(ActionEvent event) {
 			double currentTime = System.nanoTime() / 1e9;
 			if (gameState == GameState.INITIALIZATION) {
 				timeBuffer = 0;

@@ -33,6 +33,7 @@ public class Main extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLGameWindow.fxml");
+            //FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLNewHighscoreWindow.fxml");
             Scene scene = (Scene) loader.load(fxmlStream);
             stage.setScene(scene);
             stage.show();

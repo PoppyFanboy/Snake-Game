@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<Scene xmlns="http://javafx.com/javafx"
+       xmlns:fx="http://javafx.com/fxml"
+       fx:controller="poppyfanboy.snakegame.gui.NewHighscoreWindowController"
+       height="150" width="200" fx:id = "newHighscoreScene">
+    <FlowPane   fx:id = "newHighscorePane" alignment="CENTER" orientation = "VERTICAL"
+                columnHalignment="CENTER" vgap="10">
+        <children>
+            <Text fx:id = "congratsText" text = "Congratulations! New high score!"/>
+            <Text text = "Input your nickname here:"/>
+            <TextField fx:id = "nickTextField" alignment="CENTER"/>
+            <Button fx:id = "confirmInput" text = "Ok" onAction="#confirmInput"/>
+        </children>
+    </FlowPane>
+</Scene>
