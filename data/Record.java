@@ -1,7 +1,6 @@
 package poppyfanboy.snakegame.data;
 
 import java.io.*;
-import static java.lang.Math.min;
 
 /**
  * Class "Record"
@@ -72,9 +71,8 @@ public class Record {
                             "is less, than specified new length (%d)", s, newLength));
         }
 
-        boolean needElipsis = allowedLength < s.length();
-        s = s.substring(0, min(allowedLength, s.length()));
-        if (needElipsis) {
+        if (allowedLength < s.length()) {
+            s = s.substring(0, allowedLength);
             s += "...";
         }
 
@@ -94,57 +92,16 @@ public class Record {
 
     // Adds quotation marks on the both sides of the string
     // and escapes '\\', '\'', '"' characters
-    private static String quoteString(String original) {
-        StringBuilder builder = new StringBuilder("\"");
-
-        for (int i = 0; i < original.length(); i++) {
-            char nextChar = original.charAt(i);
-            if (nextChar == '"' ||
-                    nextChar == '\'' || nextChar == '\\') {
-                builder.append("\\");
-            }
-            builder.append(nextChar);
-        }
-        builder.append("\"");
-
-        return builder.toString();
+    private static String quoteString(String s) {
+        return s.replace("\'", "\\\'").replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
     // Removes: leading whitespaces, whitespaces after the last string
     // in a nickname, double whitespaces
     // Changes tabs and new-line-characters om whitespaces
     private static String removeExcessWhitespaces(String s) {
-        int firstCharIndex = -1;
-        int lastCharIndex = -1;
-        int spacesInARow = 0;
-
-        StringBuilder builder = new StringBuilder();
-
-        for (int i = 0; i < s.length(); i++) {
-            if (firstCharIndex == -1) {
-                if (s.charAt(i) == ' ') {
-                    continue;
-                } else if (firstCharIndex == -1) {
-                    firstCharIndex = i;
-                }
-            }
-
-            if (s.charAt(i) == ' ' || s.charAt(i) == '\t' || s.charAt(i) == '\n') {
-                spacesInARow++;
-                continue;
-            }
-
-            if (firstCharIndex != -1 && i > lastCharIndex) {
-                if (spacesInARow > 0) {
-                    builder.append(' ');
-                }
-                builder.append(s.charAt(i));
-                lastCharIndex = i;
-                spacesInARow = 0;
-            }
-        }
-
-        return builder.toString();
+        // trim() method truncates leading/trailing whitespaces
+        return s.replaceAll("\\s+|\\t|\\n", " ").trim();
     }
 
     private static boolean needsQuotation(String s) {
@@ -154,7 +111,7 @@ public class Record {
             if (s.charAt(i) < '0' || s.charAt(i) > '9') {
                 onlyNumbers = false;
             }
-            if (s.charAt(i) == ' ') {
+            if (s.charAt(i) == ' ' || s.charAt(i) == '@') {
                 return true;
             }
         }
