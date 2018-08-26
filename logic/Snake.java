@@ -40,17 +40,17 @@ class Snake {
 	Snake(GraphicsContext gc, int blockSize) {
 		this.gc = gc;
 		this.blockSize = blockSize;
-		
-		int initX = (int) gc.getCanvas().getWidth() / blockSize / 2;
-		int initY = (int) gc.getCanvas().getHeight() / blockSize / 2;
+
+		IntVector init = new IntVector(	(int) gc.getCanvas().getWidth() / blockSize / 2,
+										(int) gc.getCanvas().getHeight() / blockSize / 2);
 		int initLength = 5;
 		
-		head = new SnakeBlock(initX, initY);
+		head = new SnakeBlock(init);
 		head.paint(gc, blockSize, Color.BLACK);
 		
 		SnakeBlock previous = head;
-		for (int i = initX + 1; i <= initX + initLength; i++) {
-			previous = new SnakeBlock(previous, i, initY);
+		for (int i = 1; i <= initLength; i++) {
+			previous = new SnakeBlock(previous, previous.getCoords().incX(1));
 			previous.paint(gc, blockSize, Color.BLACK);
 		}
 		tail = previous;
@@ -66,10 +66,9 @@ class Snake {
 		keyPressed = false;
 		int earnedPoints = 0;
 
-		int newX = (head.getX() + dir.offsetX() + Field.FIELD_WIDTH) % Field.FIELD_WIDTH;
-		int newY = (head.getY() + dir.offsetY() + Field.FIELD_HEIGHT) % Field.FIELD_HEIGHT;
-		
-		SnakeBlock newHead = new SnakeBlock(newX, newY);
+		IntVector newCoord = head.getCoords().add(dir.getOffset());
+
+		SnakeBlock newHead = new SnakeBlock(newCoord);
 		head.next = newHead;
 		head = newHead;
 
@@ -81,11 +80,11 @@ class Snake {
 		
 		tail = tail.next;
 
-		if (field.gameField[newY][newX] == 2) {
+		if (field.gameField[newCoord.getY()][newCoord.getX()] == 2) {
 			earnedPoints = 10;
-			field.gameField[newY][newX] = 0;
+			field.gameField[newCoord.getY()][newCoord.getX()] = 0;
 			mouthfull = true;
-			SnakeBlock newTail = new SnakeBlock(tail, tail.getX(), tail.getY());
+			SnakeBlock newTail = new SnakeBlock(tail, tail.getCoords());
 			tail = newTail;
 			field.generateFood();
 		}
@@ -95,13 +94,12 @@ class Snake {
 	
 	// returns true if the snake is able to move further
 	boolean isSafeToMove(Field field) {
-		int newX = (head.getX() + dir.offsetX() + Field.FIELD_WIDTH) % Field.FIELD_WIDTH;
-		int newY = (head.getY() + dir.offsetY() + Field.FIELD_HEIGHT) % Field.FIELD_HEIGHT;
+		IntVector newCoords = head.getCoords().add(dir.getOffset());
 
         // because on the next step tail block will move
         SnakeBlock block = tail.next;
         do {
-            if (newX == block.getX() && newY == block.getY() || field.gameField[newX][newY] == 1) {
+            if (newCoords.equals(block.getCoords()) || field.gameField[newCoords.getY()][newCoords.getX()] == 1) {
                 return false;
             }
             block = block.next;
