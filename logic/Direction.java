@@ -11,15 +11,11 @@ package poppyfanboy.snakegame.logic;
 enum Direction {
     UP, RIGHT, DOWN, LEFT;
 
-    private static final Offset[] OFFSETS = { new Offset(0, -1), new Offset(1, 0),
-                                              new Offset(0, 1),  new Offset(-1, 0) };
+    private static final IntVector[] OFFSETS = { new IntVector(0, -1), new IntVector(1, 0),
+                                                 new IntVector(0, 1),  new IntVector(-1, 0) };
 
-    int offsetX() {
-        return OFFSETS[this.ordinal()].offsetX;
-    }
-
-    int offsetY() {
-        return OFFSETS[this.ordinal()].offsetY;
+    IntVector getOffset() {
+        return OFFSETS[this.ordinal()];
     }
 
     boolean ableToChange(Direction newDir) {
