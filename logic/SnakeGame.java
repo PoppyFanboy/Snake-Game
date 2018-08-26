@@ -11,12 +11,13 @@ package poppyfanboy.snakegame.logic;
  * @author PoppyFanboy
  */
 
+import javafx.fxml.FXMLLoader;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
+import javafx.event.*;
+
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -24,14 +25,13 @@ import javafx.scene.layout.*;
 import javafx.scene.canvas.*;
 import javafx.scene.text.*;
 import javafx.scene.input.*;
+
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javafx.event.*;
 import javafx.util.Duration;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 
 import static poppyfanboy.snakegame.Main.*;
 
@@ -79,17 +79,13 @@ public class SnakeGame {
 
         newHighscoreWindow = new Stage();
         newHighscoreWindow.setTitle("New Highscore!");
-
         try {
             FXMLLoader loader = new FXMLLoader();
             FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLNewHighscoreWindow.fxml");
             Scene scene = (Scene) loader.load(fxmlStream);
             newHighscoreWindow.setScene(scene);
-
-            // modality
             newHighscoreWindow.initOwner(gameWindow);
             newHighscoreWindow.initModality(Modality.APPLICATION_MODAL);
-            //newHighscoreWindow.showAndWait();
         } catch (IOException ex) {
             ex.printStackTrace();
             newHighscoreWindow.close();
@@ -156,10 +152,12 @@ public class SnakeGame {
 		snake = new Snake(gc, GAME_WIDTH / Field.FIELD_WIDTH);
 		field = new Field(gc, new int[Field.FIELD_HEIGHT][Field.FIELD_WIDTH], snake);
 
+		IntVector.setModuloX(Field.FIELD_WIDTH);
+		IntVector.setModuloY(Field.FIELD_HEIGHT);
+
 		timer = new Timeline(new KeyFrame(Duration.millis((long) (1e3 * UPDATE_INTERVAL)), new GameLoop()));
 		timer.setCycleCount(Timeline.INDEFINITE);
 		timer.play();
-		//timer.schedule(new GameLoop(), (long) (1e3 * UPDATE_INTERVAL), (long) (1e3 * UPDATE_INTERVAL));
 	}
 
 	public void stop() {
