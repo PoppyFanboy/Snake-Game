@@ -15,12 +15,12 @@ package poppyfanboy.snakegame.logic;
 class SnakeBlock extends Block{
 	SnakeBlock next = null;
 	
-	SnakeBlock(SnakeBlock next, int x, int y) {
-		super(x, y);
+	SnakeBlock(SnakeBlock next, IntVector coords) {
+		super(coords);
 		this.next = next;		
 	}
 
-	SnakeBlock(int x, int y) {
-		super(x, y);
+	SnakeBlock(IntVector coords) {
+		super(coords);
 	}
 }
