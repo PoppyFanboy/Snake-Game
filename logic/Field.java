@@ -49,10 +49,10 @@ public class Field {
     }
 
     // returns false if (x,y) coordinate belongs to the snake
-    boolean checkSnakeCollision(int x, int y) {
+    boolean checkSnakeCollision(IntVector coords) {
         SnakeBlock block = snake.getTail();
         do {
-            if (block.getX() == x && block.getY() == y) {
+            if (block.getCoords().equals(coords)) {
                 return true;
             }
             block = block.next;
@@ -68,7 +68,7 @@ public class Field {
         // я забыл тут добавить проверку границ
         // только сейчас всплыл баг
         while (gameField[randomCell / FIELD_HEIGHT][randomCell % FIELD_WIDTH] != 0 ||
-               checkSnakeCollision(randomCell % FIELD_WIDTH, randomCell / FIELD_HEIGHT)) {
+               checkSnakeCollision(new IntVector(randomCell % FIELD_WIDTH, randomCell / FIELD_HEIGHT))) {
             randomCell++;
         }
 
