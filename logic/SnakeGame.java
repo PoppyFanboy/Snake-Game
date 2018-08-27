@@ -152,9 +152,6 @@ public class SnakeGame {
 		snake = new Snake(gc, GAME_WIDTH / Field.FIELD_WIDTH);
 		field = new Field(gc, new int[Field.FIELD_HEIGHT][Field.FIELD_WIDTH], snake);
 
-		IntVector.setModuloX(Field.FIELD_WIDTH);
-		IntVector.setModuloY(Field.FIELD_HEIGHT);
-
 		timer = new Timeline(new KeyFrame(Duration.millis((long) (1e3 * UPDATE_INTERVAL)), new GameLoop()));
 		timer.setCycleCount(Timeline.INDEFINITE);
 		timer.play();

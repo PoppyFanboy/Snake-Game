@@ -10,9 +10,10 @@ package poppyfanboy.snakegame.logic;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import poppyfanboy.snakegame.Main;
-
 import java.util.*;
+
+import poppyfanboy.snakegame.Main;
+import static poppyfanboy.snakegame.logic.IntVector.vector;
 
 public class Field {
     static final int FIELD_WIDTH = 15;
@@ -68,7 +69,7 @@ public class Field {
         // я забыл тут добавить проверку границ
         // только сейчас всплыл баг
         while (gameField[randomCell / FIELD_HEIGHT][randomCell % FIELD_WIDTH] != 0 ||
-               checkSnakeCollision(new IntVector(randomCell % FIELD_WIDTH, randomCell / FIELD_HEIGHT))) {
+               checkSnakeCollision(vector(randomCell % FIELD_WIDTH, randomCell / FIELD_HEIGHT))) {
             randomCell++;
         }
 

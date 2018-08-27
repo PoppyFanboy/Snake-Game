@@ -8,11 +8,13 @@ package poppyfanboy.snakegame.logic;
  * original idea does not belong to me
  */
 
+import static poppyfanboy.snakegame.logic.IntVector.vector;
+
 enum Direction {
     UP, RIGHT, DOWN, LEFT;
 
-    private static final IntVector[] OFFSETS = { new IntVector(0, -1), new IntVector(1, 0),
-                                                 new IntVector(0, 1),  new IntVector(-1, 0) };
+    private static final IntVector[] OFFSETS = { vector(0, -1), vector(1, 0),
+                                                 vector(0, 1),  vector(-1, 0) };
 
     IntVector getOffset() {
         return OFFSETS[this.ordinal()];

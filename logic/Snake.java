@@ -20,8 +20,9 @@ package poppyfanboy.snakegame.logic;
   
 import javafx.scene.canvas.*;
 import javafx.scene.paint.*;
-
 import javafx.scene.input.KeyCode;
+
+import static poppyfanboy.snakegame.logic.IntVector.vector;
 
 class Snake {
 	private Direction dir;
@@ -41,8 +42,7 @@ class Snake {
 		this.gc = gc;
 		this.blockSize = blockSize;
 
-		IntVector init = new IntVector(	(int) gc.getCanvas().getWidth() / blockSize / 2,
-										(int) gc.getCanvas().getHeight() / blockSize / 2);
+		IntVector init = vector(Field.FIELD_WIDTH / 2, Field.FIELD_HEIGHT / 2);
 		int initLength = 5;
 		
 		head = new SnakeBlock(init);
@@ -66,7 +66,7 @@ class Snake {
 		keyPressed = false;
 		int earnedPoints = 0;
 
-		IntVector newCoord = head.getCoords().add(dir.getOffset());
+		IntVector newCoord = head.getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
 
 		SnakeBlock newHead = new SnakeBlock(newCoord);
 		head.next = newHead;
@@ -94,7 +94,7 @@ class Snake {
 	
 	// returns true if the snake is able to move further
 	boolean isSafeToMove(Field field) {
-		IntVector newCoords = head.getCoords().add(dir.getOffset());
+		IntVector newCoords = head.getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
 
         // because on the next step tail block will move
         SnakeBlock block = tail.next;
