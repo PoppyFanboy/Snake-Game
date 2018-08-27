@@ -17,7 +17,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.*;
 
-import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -26,19 +25,13 @@ import javafx.scene.canvas.*;
 import javafx.scene.text.*;
 import javafx.scene.input.*;
 
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import javafx.util.Duration;
+import poppyfanboy.snakegame.gui.GameOverListener;
 
-import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static poppyfanboy.snakegame.Main.*;
-
-// Current state of the game session
-// "INITIALIZATION" state - first step of a snake
-// that requires special conditions
 
 public class SnakeGame {
 	private Snake snake;
@@ -46,8 +39,6 @@ public class SnakeGame {
 	private Field field;
 
 	private GraphicsContext gc;
-	// private Stage gameWindow;
-	// private Stage newHighscoreWindow;
 
 	private Text scoreField;
 	private Text speedField;
@@ -73,24 +64,9 @@ public class SnakeGame {
 	// 20 seconds
 	public static final double SPEED_UP_INTERVAL = 20.0;
 
+	private ArrayList<GameOverListener> listeners = new ArrayList<>();
+
 	public SnakeGame(Pane pane) {
-		//initializing all the GUI stuff
-        /*gameWindow = (Stage) pane.getScene().getWindow();
-
-        newHighscoreWindow = new Stage();
-        newHighscoreWindow.setTitle("New Highscore!");
-        try (FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLNewHighscoreWindow.fxml")) {
-            FXMLLoader loader = new FXMLLoader();
-            Scene scene = (Scene) loader.load(fxmlStream);
-            newHighscoreWindow.setScene(scene);
-            newHighscoreWindow.initOwner(gameWindow);
-            newHighscoreWindow.initModality(Modality.APPLICATION_MODAL);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            newHighscoreWindow.close();
-            return;
-        }*/
-
 		Canvas canvas = new Canvas(GAME_WIDTH, GAME_HEIGHT);
 		pane.getChildren().add(canvas);
 		canvas.setLayoutX((WINDOW_WIDTH - GAME_WIDTH) / 2.0);
@@ -155,7 +131,7 @@ public class SnakeGame {
 		timer.setCycleCount(Timeline.INDEFINITE);
 		timer.play();
 	}
-	
+
 	public void stop() {
 		if (gameState != GameState.OFF) {
 			timer.stop();
@@ -197,6 +173,9 @@ public class SnakeGame {
 				scoreField.setText("Score:  " + score);
 			} else {
 				this.stop();
+				for (GameOverListener listener : listeners) {
+					listener.gameOver(score);
+				}
 			}
 			timeBuffer -= speed;
 		}
@@ -226,6 +205,10 @@ public class SnakeGame {
 
     public int getScore() {
 		return score;
+	}
+
+	public void addGameOverListener(GameOverListener listener) {
+		listeners.add(listener);
 	}
 
 	class GameLoop implements EventHandler<ActionEvent> {

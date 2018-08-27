@@ -38,7 +38,6 @@ public class Main extends Application {
         } catch (IOException ex) {
             ex.printStackTrace();
             aStage.close();
-            return;
         }
     }
 

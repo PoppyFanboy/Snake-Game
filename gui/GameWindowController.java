@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import static poppyfanboy.snakegame.Main.HOME;
 
-public class GameWindowController {
+public class GameWindowController implements GameOverListener{
     @FXML private Pane gamePane;
     @FXML private Scene gameScene;
     private SnakeGame game;
@@ -25,6 +25,7 @@ public class GameWindowController {
     @FXML
     private void initialize() {
         this.game = new SnakeGame(gamePane);
+        game.addGameOverListener(this);
         gameScene.addEventHandler(KeyEvent.KEY_PRESSED,
                 event -> game.handleKey(event.getCode()));
     }
@@ -37,7 +38,7 @@ public class GameWindowController {
         if (game.getGameState() != GameState.OFF) {
             game.stop();
             if (Board.getScoreBoard(0).isNewHighScore(game.getScore())) {
-                openNewHighscoreWindow();
+                openNewHighscoreWindow(game.getScore());
             } else {
                 game.start();
             }
@@ -56,7 +57,7 @@ public class GameWindowController {
         if (game.getGameState() != GameState.OFF) {
             game.stop();
             if (Board.getScoreBoard(0).isNewHighScore(game.getScore())) {
-                openNewHighscoreWindow();
+                openNewHighscoreWindow(game.getScore());
             } else {
                 Stage window = (Stage) gameScene.getWindow();
                 window.close();
@@ -89,7 +90,11 @@ public class GameWindowController {
         }
     }
 
-    private void openNewHighscoreWindow() {
+    public void gameOver(int score) {
+        openNewHighscoreWindow(score);
+    }
+
+    private void openNewHighscoreWindow(int newScore) {
         Stage gameWindow = Main.getStage();
 
         Stage newHighscoreWindow = new Stage();
@@ -100,7 +105,11 @@ public class GameWindowController {
             newHighscoreWindow.setScene(scene);
             newHighscoreWindow.initOwner(gameWindow);
             newHighscoreWindow.initModality(Modality.APPLICATION_MODAL);
-            newHighscoreWindow.showAndWait();
+
+            NewHighscoreWindowController controller = loader.<NewHighscoreWindowController>getController();
+            controller.setNewScore(newScore);
+
+            newHighscoreWindow.show();
         } catch (IOException ex) {
             ex.printStackTrace();
             newHighscoreWindow.close();
