@@ -30,8 +30,8 @@ public class Record {
         nick = "";
         score = -1;
 
-        try {
-            StreamTokenizer tokenizer = new StreamTokenizer(new StringReader(line));
+        try (StringReader sReader = new StringReader(line)) {
+            StreamTokenizer tokenizer = new StreamTokenizer(sReader);
             tokenizer.wordChars(0, 255);        // allow any characters (except for whitespaces)
             tokenizer.whitespaceChars(32, 32);  // to be a part of a nickname
             tokenizer.quoteChar('"');           // inside the quotation characters pair "\\t" will be interpreted as tab,
@@ -50,7 +50,6 @@ public class Record {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
         nick = removeExcessWhitespaces(nick);
     }
 

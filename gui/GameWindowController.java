@@ -52,9 +52,8 @@ public class GameWindowController {
         Stage scoreboardWindow = new Stage();
         scoreboardWindow.setTitle("Scoreboard");
         
-        try {
+        try (FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLScoreboardWindow.fxml")) {
             FXMLLoader loader = new FXMLLoader();
-            FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLScoreboardWindow.fxml");
             Scene scene = (Scene) loader.load(fxmlStream);
             scoreboardWindow.setScene(scene);
             
@@ -66,7 +65,6 @@ public class GameWindowController {
         } catch (IOException ex) {
             ex.printStackTrace();
             scoreboardWindow.close();
-            return;
         }
     }
 }

@@ -27,9 +27,8 @@ public class Main extends Application {
     public void start(Stage stage) {
         stage.setTitle("Snake Game | by PoppyFanboy");
 
-        try {
+        try (FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLGameWindow.fxml")) {
             FXMLLoader loader = new FXMLLoader();
-            FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLGameWindow.fxml");
             Scene scene = (Scene) loader.load(fxmlStream);
             stage.setScene(scene);
             stage.show();

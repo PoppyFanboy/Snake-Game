@@ -79,9 +79,8 @@ public class SnakeGame {
 
         newHighscoreWindow = new Stage();
         newHighscoreWindow.setTitle("New Highscore!");
-        try {
+        try (FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLNewHighscoreWindow.fxml")) {
             FXMLLoader loader = new FXMLLoader();
-            FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLNewHighscoreWindow.fxml");
             Scene scene = (Scene) loader.load(fxmlStream);
             newHighscoreWindow.setScene(scene);
             newHighscoreWindow.initOwner(gameWindow);

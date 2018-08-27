@@ -43,8 +43,7 @@ public class ScoreboardWindowController {
         boolean boardFound = false;
         Board board = new Board(10, n);
 
-        try {
-            Scanner in = new Scanner(Paths.get(HOME + "data/Scoreboard.tab"));
+        try (Scanner in = new Scanner(Paths.get(HOME + "data/Scoreboard.tab"))) {
             while (in.hasNext()) {
                 String line = in.nextLine();
                 String[] tokens = line.split(" ");
@@ -82,8 +81,7 @@ public class ScoreboardWindowController {
         // with a number specified in "boardNumber" argument
         boolean updatedBoard = false;
 
-        try {
-            Scanner in = new Scanner(Paths.get(HOME + "data/Scoreboard.tab"));
+        try (Scanner in = new Scanner(Paths.get(HOME + "data/Scoreboard.tab"))) {
             while (in.hasNext()) {
                 String line = in.nextLine();
                 String[] tokens = line.split(" ");
