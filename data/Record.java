@@ -92,7 +92,8 @@ public class Record {
     // Adds quotation marks on the both sides of the string
     // and escapes '\\', '\'', '"' characters
     private static String quoteString(String s) {
-        return s.replace("\'", "\\\'").replace("\\", "\\\\").replace("\"", "\\\"");
+        // $1 is a reference to ('|"|\\) group
+        return s.replace("(\'|\"|\\\\)", "\\\\$1");
     }
 
     // Removes: leading whitespaces, whitespaces after the last string
@@ -100,7 +101,8 @@ public class Record {
     // Changes tabs and new-line-characters om whitespaces
     private static String removeExcessWhitespaces(String s) {
         // trim() method truncates leading/trailing whitespaces
-        return s.replaceAll("\\s+|\\t|\\n", " ").trim();
+        // \\s includes [ \t\n\x0B\f\r]
+        return s.replaceAll("\\s+", " ").trim();
     }
 
     private static boolean needsQuotation(String s) {
