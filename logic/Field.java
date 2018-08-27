@@ -64,17 +64,22 @@ public class Field {
 
     // generates and paints food on game field
     boolean generateFood() {
-        int randomCell = (int) (FIELD_WIDTH * FIELD_HEIGHT * Math.random());
+        int size = FIELD_WIDTH * FIELD_HEIGHT;
+        int randomCell = (int) (size * Math.random());
+        int offset = 0;
+        int foodX = randomCell % FIELD_WIDTH;
+        int foodY = randomCell / FIELD_HEIGHT;
 
-        // я забыл тут добавить проверку границ
-        // только сейчас всплыл баг
-        while (gameField[randomCell / FIELD_HEIGHT][randomCell % FIELD_WIDTH] != 0 ||
-               checkSnakeCollision(vector(randomCell % FIELD_WIDTH, randomCell / FIELD_HEIGHT))) {
-            randomCell++;
+        while ( (gameField[foodY][foodX] != 0 || checkSnakeCollision(vector(foodX, foodY))) && offset < size) {
+            foodX = (randomCell + offset) % FIELD_WIDTH;
+            foodY = ((randomCell + offset) % size) / FIELD_WIDTH;
+            offset++;
         }
 
-        int foodX = randomCell % FIELD_WIDTH;
-        int foodY = randomCell / FIELD_WIDTH;
+        if (offset >= size) {
+            return false;
+        }
+
         gameField[foodY][foodX] = 2;
         gc.setFill(Color.GREEN);
         gc.fillRect(foodX * blockSize + blockSize * 0.3, foodY * blockSize + blockSize * 0.3, blockSize * 0.4, blockSize * 0.4);
