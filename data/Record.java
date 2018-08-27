@@ -93,7 +93,7 @@ public class Record {
     // and escapes '\\', '\'', '"' characters
     private static String quoteString(String s) {
         // $1 is a reference to ('|"|\\) group
-        return s.replace("(\'|\"|\\\\)", "\\\\$1");
+        return "\"" + s.replace("(\'|\"|\\\\)", "\\\\$1") + "\"";
     }
 
     // Removes: leading whitespaces, whitespaces after the last string
