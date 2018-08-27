@@ -16,17 +16,17 @@ public class IntVector {
     private int x;
     private int y;
 
-    private static int moduloX = 15;
-    private static int moduloY = 15;
-
-    public IntVector(int x, int y) {
-        x = x % moduloX;
-        y = y % moduloY;
-        if (x < 0) { x += moduloX; }
-        if (y < 0) { y += moduloY; }
-
+    private IntVector(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public static IntVector vector(int x, int y) {
+        return new IntVector(x, y);
+    }
+
+    public static IntVector vector(double x, double y) {
+        return new IntVector((int) x, (int) y);
     }
 
     public IntVector add(IntVector term) {
@@ -41,10 +41,6 @@ public class IntVector {
         return new IntVector(this.x, this.y + y);
     }
 
-    public IntVector copy() {
-        return new IntVector(this.x, this.y);
-    }
-
     public int getX() {
         return x;
     }
@@ -57,21 +53,16 @@ public class IntVector {
         return this.x == vector.x && this.y == vector.y;
     }
 
-    public static boolean setModuloX(int moduloX) {
-        if (moduloX < 0) {
-            return false;
-        } else {
-            IntVector.moduloX = moduloX;
-            return true;
-        }
+    public IntVector mod(int moduloX, int moduloY) {
+        int newX = x % moduloX;
+        int newY = y % moduloY;
+        if (newX < 0) { newX += moduloX; }
+        if (newY < 0) { newY += moduloY; }
+
+        return new IntVector(newX, newY);
     }
 
-    public static boolean setModuloY(int moduloY) {
-        if (moduloY < 0) {
-            return false;
-        } else {
-            IntVector.moduloY = moduloY;
-            return true;
-        }
+    public IntVector mod(int modulo) {
+        return this.mod(modulo, modulo);
     }
 }
