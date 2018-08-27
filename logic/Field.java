@@ -19,46 +19,36 @@ public class Field {
     static final int FIELD_WIDTH = 15;
     static final int FIELD_HEIGHT = 15;
 
-    private int blockSize = 10;
+    private int blockSize = Main.GAME_WIDTH / FIELD_WIDTH;
     private GraphicsContext gc;
 
-    int[][] gameField = new int[FIELD_HEIGHT][FIELD_WIDTH];
+    HashSet<ObjectOnField> gameField = new HashSet<>();
+
     private Snake snake;
+    private Block food;
 
     // paints walls, generates food
-    Field(GraphicsContext gc, int[][] gameField, Snake snake) {
+    Field(GraphicsContext gc, HashSet<ObjectOnField> labyrinth, Snake snake) {
         this.gc = gc;
         this.snake = snake;
 
         blockSize = Main.GAME_WIDTH / Field.FIELD_WIDTH;
 
-        // copying array
-        for (int i = 0; i < Math.min(gameField.length, FIELD_HEIGHT); i++) {
-            this.gameField[i] = Arrays.copyOf(gameField[i], FIELD_WIDTH);
-        }
-
-        for (int i = 0; i < FIELD_HEIGHT; i++) {
-            for (int j = 0; j < FIELD_WIDTH; j++) {
-                if (this.gameField[i][j] == 1) {
-                    gc.setFill(Color.DARKGRAY);
-                    gc.fillRect(j * blockSize, i * blockSize, blockSize, blockSize);
-                }
-            }
-        }
-
+        gameField.addAll(labyrinth);
+        gameField.add(snake);
         generateFood();
+
+        for (ObjectOnField object : gameField) {
+            object.paint(gc);
+        }
     }
 
-    // returns false if (x,y) coordinate belongs to the snake
-    boolean checkSnakeCollision(IntVector coords) {
-        SnakeBlock block = snake.getTail();
-        do {
-            if (block.getCoords().equals(coords)) {
+    boolean checkCollision(IntVector coords) {
+        for (ObjectOnField object : gameField) {
+            if (object.collision(coords)) {
                 return true;
             }
-            block = block.next;
-        } while (block != null);
-
+        }
         return false;
     }
 
@@ -70,20 +60,27 @@ public class Field {
         int foodX = randomCell % FIELD_WIDTH;
         int foodY = randomCell / FIELD_HEIGHT;
 
-        while ( (gameField[foodY][foodX] != 0 || checkSnakeCollision(vector(foodX, foodY))) && offset < size) {
-            foodX = (randomCell + offset) % FIELD_WIDTH;
-            foodY = ((randomCell + offset) % size) / FIELD_WIDTH;
-            offset++;
+        while (offset < size) {
+            if (checkCollision(vector(foodX, foodY))) {
+                offset++;
+                foodX = (randomCell + offset) % FIELD_WIDTH;
+                foodY = ((randomCell + offset) % size) / FIELD_WIDTH;
+            } else {
+                break;
+            }
         }
 
         if (offset >= size) {
+            food = null;
             return false;
         }
 
-        gameField[foodY][foodX] = 2;
-        gc.setFill(Color.GREEN);
-        gc.fillRect(foodX * blockSize + blockSize * 0.3, foodY * blockSize + blockSize * 0.3, blockSize * 0.4, blockSize * 0.4);
-
+        food = new Block(vector(foodX, foodY), blockSize, Color.GREEN);
+        food.paint(gc);
         return true;
+    }
+
+    Block getFood() {
+        return food;
     }
 }
