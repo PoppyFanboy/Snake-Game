@@ -88,16 +88,6 @@ class Snake implements ObjectOnField {
 	
 	// returns true if the snake is able to move further
 	boolean isSafeToMove(Field field) {
-		/*IntVector newCoords = head.getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
-
-        // because on the next step tail block will move
-        SnakeBlock block = tail.next;
-        do {
-            if (newCoords.equals(block.getCoords()) || field.gameField[newCoords.getY()][newCoords.getX()] == 1) {
-                return false;
-            }
-            block = block.next;
-        } while (block != null);*/
 		IntVector newCoords = blocks.get(0).getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
 		return !field.checkCollision(newCoords);
 	}

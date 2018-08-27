@@ -6,6 +6,9 @@ import javafx.scene.layout.*;
 import javafx.scene.*;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.*;
+import poppyfanboy.snakegame.Main;
+import poppyfanboy.snakegame.data.Board;
+import poppyfanboy.snakegame.logic.GameState;
 import poppyfanboy.snakegame.logic.SnakeGame;
 
 import java.io.FileInputStream;
@@ -30,8 +33,17 @@ public class GameWindowController {
     private void newGame() {
         Stage window = (Stage) gameScene.getWindow();
         window.setOnHiding(event -> game.stop());
-        game.stop();
-        game.start();
+
+        if (game.getGameState() != GameState.OFF) {
+            game.stop();
+            if (Board.getScoreBoard(0).isNewHighScore(game.getScore())) {
+                openNewHighscoreWindow();
+            } else {
+                game.start();
+            }
+        } else {
+            game.start();
+        }
     }
     
     @FXML
@@ -41,9 +53,18 @@ public class GameWindowController {
     
     @FXML
     private void exit() {
-        game.stop();
-        Stage window = (Stage) gameScene.getWindow();
-        window.close();
+        if (game.getGameState() != GameState.OFF) {
+            game.stop();
+            if (Board.getScoreBoard(0).isNewHighScore(game.getScore())) {
+                openNewHighscoreWindow();
+            } else {
+                Stage window = (Stage) gameScene.getWindow();
+                window.close();
+            }
+        } else {
+            Stage window = (Stage) gameScene.getWindow();
+            window.close();
+        }
     }
     
     @FXML
@@ -65,6 +86,24 @@ public class GameWindowController {
         } catch (IOException ex) {
             ex.printStackTrace();
             scoreboardWindow.close();
+        }
+    }
+
+    private void openNewHighscoreWindow() {
+        Stage gameWindow = Main.getStage();
+
+        Stage newHighscoreWindow = new Stage();
+        newHighscoreWindow.setTitle("New Highscore!");
+        try (FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLNewHighscoreWindow.fxml")) {
+            FXMLLoader loader = new FXMLLoader();
+            Scene scene = (Scene) loader.load(fxmlStream);
+            newHighscoreWindow.setScene(scene);
+            newHighscoreWindow.initOwner(gameWindow);
+            newHighscoreWindow.initModality(Modality.APPLICATION_MODAL);
+            newHighscoreWindow.showAndWait();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            newHighscoreWindow.close();
         }
     }
 }
