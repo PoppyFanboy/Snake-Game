@@ -1,5 +1,7 @@
 package poppyfanboy.snakegame.logic;
 
+import javafx.scene.paint.Color;
+
 /**
  * Class "SnakeBlock"
  * The class is used to represent a single segment of a snake
@@ -15,12 +17,8 @@ package poppyfanboy.snakegame.logic;
 class SnakeBlock extends Block{
 	SnakeBlock next = null;
 	
-	SnakeBlock(SnakeBlock next, IntVector coords) {
-		super(coords);
+	SnakeBlock(SnakeBlock next, IntVector coords, int size, Color color) {
+		super(coords, size, color);
 		this.next = next;		
-	}
-
-	SnakeBlock(IntVector coords) {
-		super(coords);
 	}
 }
