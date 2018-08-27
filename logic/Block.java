@@ -14,7 +14,7 @@ public class Block {
     private IntVector coords;
 
     Block(IntVector coords) {
-        this.coords = coords.copy();
+        this.coords = coords;
     }
 
     void paint(GraphicsContext gc, int blockSize, Color color) {
