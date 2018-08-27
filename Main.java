@@ -23,20 +23,27 @@ public class Main extends Application {
     
     public static final String HOME = "src/poppyfanboy/snakegame/";
 
+    private static Stage stage;
+
     @Override
-    public void start(Stage stage) {
-        stage.setTitle("Snake Game | by PoppyFanboy");
+    public void start(Stage aStage) {
+        stage = aStage;
+        aStage.setTitle("Snake Game | by PoppyFanboy");
 
         try (FileInputStream fxmlStream = new FileInputStream(HOME + "gui/FXMLGameWindow.fxml")) {
             FXMLLoader loader = new FXMLLoader();
             Scene scene = (Scene) loader.load(fxmlStream);
-            stage.setScene(scene);
-            stage.show();
+            aStage.setScene(scene);
+            aStage.show();
         } catch (IOException ex) {
             ex.printStackTrace();
-            stage.close();
+            aStage.close();
             return;
         }
+    }
+
+    public static Stage getStage() {
+        return stage;
     }
     
     public static void main(String[] args) {
