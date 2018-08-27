@@ -21,16 +21,19 @@ package poppyfanboy.snakegame.logic;
 import javafx.scene.canvas.*;
 import javafx.scene.paint.*;
 import javafx.scene.input.KeyCode;
+import poppyfanboy.snakegame.Main;
+
+import java.util.ArrayList;
 
 import static poppyfanboy.snakegame.logic.IntVector.vector;
 
-class Snake {
+class Snake implements ObjectOnField {
 	private Direction dir;
-	private SnakeBlock head;
-	private SnakeBlock tail;
-	
+
 	private GraphicsContext gc;
-	private int blockSize;
+	private int blockSize = Main.GAME_WIDTH / Field.FIELD_WIDTH;
+
+	ArrayList<Block> blocks = new ArrayList<>();
 
 	// костыль: если mouthfull == true, то на следующем шаге змейки хвостовой
 	// блок визуально не убирается
@@ -38,54 +41,45 @@ class Snake {
 	// костыль: если значение == true, то нажатия любых клавиш не обрабатываются
 	private boolean keyPressed = false;
 	
-	Snake(GraphicsContext gc, int blockSize) {
+	Snake(GraphicsContext gc) {
 		this.gc = gc;
-		this.blockSize = blockSize;
 
-		IntVector init = vector(Field.FIELD_WIDTH / 2, Field.FIELD_HEIGHT / 2);
+		IntVector prev = vector(Field.FIELD_WIDTH / 2, Field.FIELD_HEIGHT / 2);
 		int initLength = 5;
-		
-		head = new SnakeBlock(init);
-		head.paint(gc, blockSize, Color.BLACK);
-		
-		SnakeBlock previous = head;
+
 		for (int i = 1; i <= initLength; i++) {
-			previous = new SnakeBlock(previous, previous.getCoords().incX(1));
-			previous.paint(gc, blockSize, Color.BLACK);
+			blocks.add(new Block(prev, blockSize, Color.BLACK));
+			prev = prev.incX(1);
 		}
-		tail = previous;
 		
 		dir = Direction.LEFT;
-	}
-	
-	Snake(GraphicsContext gc) {
-		this(gc, 10);
 	}
 
 	int move(Field field) {
 		keyPressed = false;
 		int earnedPoints = 0;
 
-		IntVector newCoord = head.getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
+		IntVector newCoords = blocks.get(0).getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
+		boolean grown = false;
+		Block oldTail = blocks.get(blocks.size() - 1);
 
-		SnakeBlock newHead = new SnakeBlock(newCoord);
-		head.next = newHead;
-		head = newHead;
-
-		if (!mouthfull) {
-			tail.paint(gc, blockSize, Color.WHITE);
-		}
-		mouthfull = false;
-		head.paint(gc, blockSize, Color.BLACK);
-		
-		tail = tail.next;
-
-		if (field.gameField[newCoord.getY()][newCoord.getX()] == 2) {
+		if (field.getFood().getCoords().equals(newCoords)) {
 			earnedPoints = 10;
-			field.gameField[newCoord.getY()][newCoord.getX()] = 0;
-			mouthfull = true;
-			SnakeBlock newTail = new SnakeBlock(tail, tail.getCoords());
-			tail = newTail;
+
+			blocks.add(1, new Block(blocks.get(0).getCoords(), blockSize, Color.BLACK));
+			grown = true;
+		}
+
+		for (int i = 0; i < (grown ? 2 : blocks.size()); i++) {
+			IntVector prevCoords = blocks.get(i).getCoords();
+			blocks.set(i, new Block(newCoords, blockSize, Color.BLACK));
+			newCoords = prevCoords;
+		}
+		blocks.get(0).paint(gc);
+
+		if (!grown) {
+			oldTail.paint(gc, Color.WHITE);
+		} else {
 			field.generateFood();
 		}
 
@@ -94,7 +88,7 @@ class Snake {
 	
 	// returns true if the snake is able to move further
 	boolean isSafeToMove(Field field) {
-		IntVector newCoords = head.getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
+		/*IntVector newCoords = head.getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
 
         // because on the next step tail block will move
         SnakeBlock block = tail.next;
@@ -103,9 +97,9 @@ class Snake {
                 return false;
             }
             block = block.next;
-        } while (block != null);
-
-		return true;
+        } while (block != null);*/
+		IntVector newCoords = blocks.get(0).getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
+		return !field.checkCollision(newCoords);
 	}
 
 	// changes the direction of the snake
@@ -130,7 +124,22 @@ class Snake {
 		}
 	}
 
-	SnakeBlock getTail() {
-		return tail;
+	public boolean collision(IntVector point) {
+		for (Block block : blocks) {
+			if (block.getCoords().equals(point)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void paint(GraphicsContext gc, Color color) {
+		for (Block block : blocks) {
+			block.paint(gc, color);
+		}
+	}
+
+	public void paint(GraphicsContext gc) {
+		this.paint(gc, Color.BLACK);
 	}
 }
