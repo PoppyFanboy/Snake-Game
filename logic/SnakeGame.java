@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
+import java.util.HashSet;
 
 import static poppyfanboy.snakegame.Main.*;
 
@@ -148,8 +149,8 @@ public class SnakeGame {
 		setDefaultSettings();
 		gameState = GameState.INITIALIZATION;
 
-		snake = new Snake(gc, GAME_WIDTH / Field.FIELD_WIDTH);
-		field = new Field(gc, new int[Field.FIELD_HEIGHT][Field.FIELD_WIDTH], snake);
+		snake = new Snake(gc);
+		field = new Field(gc, new HashSet<ObjectOnField>(), snake);
 
 		timer = new Timeline(new KeyFrame(Duration.millis((long) (1e3 * UPDATE_INTERVAL)), new GameLoop()));
 		timer.setCycleCount(Timeline.INDEFINITE);
