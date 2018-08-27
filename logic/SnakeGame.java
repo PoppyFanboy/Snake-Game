@@ -5,7 +5,7 @@ package poppyfanboy.snakegame.logic;
  *
  * Classic game "Snake"
  * Conducts the main loop of the game session,
- * paints the snake, food, walls of the labyrinth, points and speed
+ * paints the snake, food, walls of the labyrinth, score and speed
  * on the Pane object when constructed
  *
  * @author PoppyFanboy
@@ -39,7 +39,6 @@ import static poppyfanboy.snakegame.Main.*;
 // Current state of the game session
 // "INITIALIZATION" state - first step of a snake
 // that requires special conditions
-enum GameState { OFF, ON, PAUSE, INITIALIZATION }
 
 public class SnakeGame {
 	private Snake snake;
@@ -47,14 +46,14 @@ public class SnakeGame {
 	private Field field;
 
 	private GraphicsContext gc;
-	private Stage gameWindow;
-	private Stage newHighscoreWindow;
+	// private Stage gameWindow;
+	// private Stage newHighscoreWindow;
 
-	private Text pointsField;
+	private Text scoreField;
 	private Text speedField;
 	private Text pauseField;
 
-	private int points;
+	private int score;
 	private int speedLevel;
 	// time needed for a snake to make exactly one movement (in seconds)
 	private double speed;
@@ -76,7 +75,7 @@ public class SnakeGame {
 
 	public SnakeGame(Pane pane) {
 		//initializing all the GUI stuff
-        gameWindow = (Stage) pane.getScene().getWindow();
+        /*gameWindow = (Stage) pane.getScene().getWindow();
 
         newHighscoreWindow = new Stage();
         newHighscoreWindow.setTitle("New Highscore!");
@@ -90,7 +89,7 @@ public class SnakeGame {
             ex.printStackTrace();
             newHighscoreWindow.close();
             return;
-        }
+        }*/
 
 		Canvas canvas = new Canvas(GAME_WIDTH, GAME_HEIGHT);
 		pane.getChildren().add(canvas);
@@ -105,10 +104,10 @@ public class SnakeGame {
 		gc = canvas.getGraphicsContext2D();
 		
 		int fontSize = (WINDOW_WIDTH - GAME_WIDTH) / 2 / 8;
-		pointsField = new Text("Points: 0");
-		pointsField.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
-		pointsField.setLayoutX((WINDOW_WIDTH + GAME_WIDTH) / 2.0 + fontSize);
-		pointsField.setLayoutY((WINDOW_HEIGHT - GAME_HEIGHT) / 2.0 + fontSize);
+		scoreField = new Text("Points: 0");
+		scoreField.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
+		scoreField.setLayoutX((WINDOW_WIDTH + GAME_WIDTH) / 2.0 + fontSize);
+		scoreField.setLayoutY((WINDOW_HEIGHT - GAME_HEIGHT) / 2.0 + fontSize);
 		
 		speedField = new Text("Speed:  0");
 		speedField.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
@@ -121,7 +120,7 @@ public class SnakeGame {
 		pauseField.setLayoutX((WINDOW_WIDTH + GAME_WIDTH) / 2.0 + fontSize);
 		pauseField.setLayoutY((WINDOW_HEIGHT - GAME_HEIGHT) / 2.0 + fontSize * 4);
 
-		pane.getChildren().add(pointsField);
+		pane.getChildren().add(scoreField);
 		pane.getChildren().add(speedField);
 		pane.getChildren().add(pauseField);
 		
@@ -133,10 +132,10 @@ public class SnakeGame {
 		gc.setFill(Color.WHITE);
 		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 		pauseField.setFill(Color.TRANSPARENT);
-		pointsField.setText("Points: 0");
+		scoreField.setText("Score:  0");
 		speedField.setText("Speed:  0");
 		
-		points = 0;
+		score = 0;
 		speedLevel = 0;
 		
 		speed = 0.5;
@@ -156,12 +155,11 @@ public class SnakeGame {
 		timer.setCycleCount(Timeline.INDEFINITE);
 		timer.play();
 	}
-
+	
 	public void stop() {
 		if (gameState != GameState.OFF) {
 			timer.stop();
 			gameState = GameState.OFF;
-            newHighscoreWindow.show();
 		}
 	}
 	
@@ -195,8 +193,8 @@ public class SnakeGame {
 
 		while (timeBuffer >= speed) {
 			if (snake.isSafeToMove(field)) {
-				points += snake.move(field);
-				pointsField.setText("Points: " + points);
+				score += snake.move(field);
+				scoreField.setText("Score:  " + score);
 			} else {
 				this.stop();
 			}
@@ -220,6 +218,14 @@ public class SnakeGame {
 				pause();
 			}
 		}
+	}
+
+	public GameState getGameState() {
+        return gameState;
+    }
+
+    public int getScore() {
+		return score;
 	}
 
 	class GameLoop implements EventHandler<ActionEvent> {
