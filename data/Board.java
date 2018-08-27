@@ -1,6 +1,11 @@
 package poppyfanboy.snakegame.data;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.util.*;
+
+import static poppyfanboy.snakegame.Main.HOME;
 
 public class Board {
     private ArrayList<Record> records = new ArrayList<Record>();
@@ -42,18 +47,89 @@ public class Board {
         }
     }
 
-    public boolean isNewHighScore(Record newRecord) {
+    public boolean isNewHighScore(int newScore) {
         if (maxSize > records.size()) {
             return true;
         }
 
         for (Record record : records) {
-            if (record.getScore() < newRecord.getScore()) {
+            if (record.getScore() < newScore) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public static Board getScoreBoard(int n) throws IllegalArgumentException {
+        boolean boardFound = false;
+        Board board = new Board(10, n);
+
+        try (Scanner in = new Scanner(Paths.get(HOME + "data/Scoreboard.tab"))) {
+            while (in.hasNext()) {
+                String line = in.nextLine();
+                String[] tokens = line.split(" ");
+
+                if (tokens[0].equals("@board") && tokens.length > 1) {
+                    if (Integer.valueOf(tokens[1]) == n) {
+                        boardFound = true;
+                    } else if (boardFound) {
+                        break;
+                    }
+                    continue;
+                }
+
+                if (boardFound) {
+                    board.add(new Record(line));
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        if (!boardFound) {
+            throw new IllegalArgumentException("There is no scoreboard with order " + n);
+        }
+
+        return board;
+    }
+
+    public static void saveRecord(Record record, int boardNumber) {
+        Board board = getScoreBoard(boardNumber);
+        board.add(record);
+
+        String buffer = "";
+        // "true" if we are going through records related to the board
+        // with a number specified in "boardNumber" argument
+        boolean updatedBoard = false;
+
+        try (Scanner in = new Scanner(Paths.get(HOME + "data/Scoreboard.tab"))) {
+            while (in.hasNext()) {
+                String line = in.nextLine();
+                String[] tokens = line.split(" ");
+
+                if (tokens[0].equals("@board") && tokens.length > 1) {
+                    if (Integer.valueOf(tokens[1]) == boardNumber) {
+                        updatedBoard = true;
+                    } else {
+                        updatedBoard = false;
+                        buffer += "@board " + Integer.valueOf(tokens[1]) + "\n";
+                    }
+                    continue;
+                }
+
+                if (!updatedBoard) {
+                    buffer += line + "\n";
+                }
+            }
+            in.close();
+
+            PrintWriter writer = new PrintWriter(HOME + "data/Scoreboard.tab");
+            writer.write(buffer + board.toString());
+            writer.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
