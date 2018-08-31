@@ -10,7 +10,8 @@
 <Scene xmlns="http://javafx.com/javafx"
        xmlns:fx="http://javafx.com/fxml"
        fx:controller="poppyfanboy.snakegame.gui.NewHighscoreWindowController"
-       height="150" width="200" fx:id = "newHighscoreScene">
+       height="150" width="200" fx:id = "newHighscoreScene"
+       onKeyPressed = "#handle">
     <FlowPane   fx:id = "newHighscorePane" alignment="CENTER" orientation = "VERTICAL"
                 columnHalignment="CENTER" vgap="10">
         <children>
