@@ -75,7 +75,7 @@ public class Field {
             return false;
         }
 
-        food = new Block(vector(foodX, foodY), blockSize, Color.GREEN);
+        food = new Block(vector(foodX, foodY), blockSize, Color.GREEN, 0.5);
         food.paint(gc);
         return true;
     }

@@ -35,11 +35,10 @@ class Snake implements ObjectOnField {
 
 	ArrayList<Block> blocks = new ArrayList<>();
 
-	// костыль: если mouthfull == true, то на следующем шаге змейки хвостовой
-	// блок визуально не убирается
-	private boolean mouthfull = false;
 	// костыль: если значение == true, то нажатия любых клавиш не обрабатываются
 	private boolean keyPressed = false;
+
+	private double thickness = 0.8;
 	
 	Snake(GraphicsContext gc) {
 		this.gc = gc;
@@ -48,7 +47,7 @@ class Snake implements ObjectOnField {
 		int initLength = 5;
 
 		for (int i = 1; i <= initLength; i++) {
-			blocks.add(new Block(prev, blockSize, Color.BLACK));
+			blocks.add(new Block(prev, blockSize, Color.BLACK, thickness));
 			prev = prev.incX(1);
 		}
 		
@@ -59,26 +58,28 @@ class Snake implements ObjectOnField {
 		keyPressed = false;
 		int earnedPoints = 0;
 
-		IntVector newCoords = blocks.get(0).getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
+		IntVector newCoordsMod = blocks.get(0).getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
+		IntVector newCoords = blocks.get(0).getCoords().add(dir.getOffset());
+
 		boolean grown = false;
 		Block oldTail = blocks.get(blocks.size() - 1);
 
-		if (field.getFood().getCoords().equals(newCoords)) {
+		if (field.getFood().getCoords().equals(newCoordsMod)) {
 			earnedPoints = 10;
 
-			blocks.add(1, new Block(blocks.get(0).getCoords(), blockSize, Color.BLACK));
+			blocks.add(1, new Block(blocks.get(0).getCoords(), blockSize, Color.BLACK, thickness));
 			grown = true;
 		}
 
 		for (int i = 0; i < (grown ? 2 : blocks.size()); i++) {
 			IntVector prevCoords = blocks.get(i).getCoords();
-			blocks.set(i, new Block(newCoords, blockSize, Color.BLACK));
-			newCoords = prevCoords;
+			blocks.set(i, new Block(newCoordsMod, blockSize, Color.BLACK, thickness));
+			newCoordsMod = prevCoords;
 		}
-		blocks.get(0).paint(gc);
+		Block.fillLine(gc, newCoords, blocks.get(1).getCoords(), blockSize, thickness);
 
 		if (!grown) {
-			oldTail.paint(gc, Color.WHITE);
+			oldTail.paint(gc, Color.WHITE, 1.0);
 		} else {
 			field.generateFood();
 		}
@@ -124,8 +125,11 @@ class Snake implements ObjectOnField {
 	}
 
 	public void paint(GraphicsContext gc, Color color) {
-		for (Block block : blocks) {
-			block.paint(gc, color);
+		for (int i = 0; i < blocks.size(); i++) {
+			if (i > 0) {
+				Block.fillLine(gc, blocks.get(i - 1).getCoords(),
+						blocks.get(i).getCoords(), blockSize, thickness);
+			}
 		}
 	}
 
