@@ -99,7 +99,7 @@ public class Record {
     // Removes: leading whitespaces, whitespaces after the last string
     // in a nickname, double whitespaces
     // Changes tabs and new-line-characters om whitespaces
-    private static String removeExcessWhitespaces(String s) {
+    public static String removeExcessWhitespaces(String s) {
         // trim() method truncates leading/trailing whitespaces
         // \\s includes [ \t\n\x0B\f\r]
         return s.replaceAll("\\s+", " ").trim();
@@ -112,7 +112,8 @@ public class Record {
             if (s.charAt(i) < '0' || s.charAt(i) > '9') {
                 onlyNumbers = false;
             }
-            if (s.charAt(i) == ' ' || s.charAt(i) == '@') {
+            if (s.charAt(i) == ' ' || s.charAt(i) == '@'
+                    || (s.charAt(0) >= '0' && s.charAt(0) <= '9')) {
                 return true;
             }
         }
