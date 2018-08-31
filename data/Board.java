@@ -17,19 +17,34 @@ public class Board {
         this.boardNumber = boardNumber;
     }
 
-    public void add(Record record) {
+    public int add(Record record) {
         for (int i = 0; i < records.size(); i++) {
-            if (record.getNick().equals(records.get(i).getNick()) &&
-                    record.getScore() > records.get(i).getScore()) {
-                records.remove(i);
-                break;
+            if (record.getNick().equals(records.get(i).getNick())) {
+                if (record.getScore() > records.get(i).getScore()) {
+                    records.remove(i);
+                    break;
+                } else {
+                    return -(i + 1);
+                }
             }
         }
-        records.add(record);
-        records.sort((record1, record2) ->
-                -Integer.compare(record1.getScore(), record2. getScore()));
+
+        int position = records.size();
+        for (int i = records.size() - 1; i >= 0; i--) {
+            if (record.getScore() > records.get(i).getScore()) {
+                position = i;
+            }
+        }
+
+        records.add(position, record);
         if (records.size() > maxSize) {
             records.remove(records.size() - 1);
+        }
+
+        if (position < maxSize) {
+            return position + 1;
+        } else {
+            return 0;
         }
     }
 
@@ -94,9 +109,9 @@ public class Board {
         return board;
     }
 
-    public static void saveRecord(Record record, int boardNumber) {
+    public static int saveRecord(Record record, int boardNumber) {
         Board board = getScoreBoard(boardNumber);
-        board.add(record);
+        int position = board.add(record);
 
         String buffer = "";
         // "true" if we are going through records related to the board
@@ -130,14 +145,16 @@ public class Board {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
+        return position;
     }
 
     @Override
     public String toString() {
-        String s = "@board " + boardNumber + "\n";
+        StringBuilder builder = new StringBuilder("@board ").append(boardNumber + "\n");
         for (Record record : records) {
-            s += record.toString() + "\n";
+            builder.append(record.toString() + "\n");
         }
-        return s;
+        return builder.toString();
     }
 }
