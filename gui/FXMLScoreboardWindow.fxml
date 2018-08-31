@@ -8,7 +8,7 @@
         xmlns:fx="http://javafx.com/fxml"
         fx:controller="poppyfanboy.snakegame.gui.ScoreboardWindowController"
         fx:id = "scoreboardScene" width = "350" height = "500">
-    <TabPane tabClosingPolicy = "UNAVAILABLE">
+    <TabPane tabClosingPolicy = "UNAVAILABLE" fx:id = "tabPane">
         <tabs>
             <Tab text = "Labyrinth 1">
                 <FlowPane fx:id = "scoreboardPane1" orientation = "VERTICAL">
