@@ -44,6 +44,7 @@ public class SnakeGame {
 	private Text speedField;
 	private Text pauseField;
 
+	private int labyrinthNumber;
 	private int score;
 	private int speedLevel;
 	// time needed for a snake to make exactly one movement (in seconds)
@@ -120,10 +121,11 @@ public class SnakeGame {
 		lastSpeedUp = 0.0;
 	}
 	
-	public void start() {
+	public void start(int labyrinthNumber) {
 		setDefaultSettings();
 		gameState = GameState.INITIALIZATION;
 
+		this.labyrinthNumber = labyrinthNumber;
 		snake = new Snake(gc);
 		field = new Field(gc, new HashSet<ObjectOnField>(), snake);
 
@@ -205,6 +207,10 @@ public class SnakeGame {
 
     public int getScore() {
 		return score;
+	}
+
+	public int getLabyrinth() {
+		return labyrinthNumber;
 	}
 
 	public void addGameOverListener(GameOverListener listener) {

@@ -37,13 +37,13 @@ public class GameWindowController implements GameOverListener{
 
         if (game.getGameState() != GameState.OFF) {
             game.stop();
-            if (Board.getScoreBoard(0).isNewHighScore(game.getScore())) {
+            if (Board.getScoreBoard(game.getLabyrinth()).isNewHighScore(game.getScore())) {
                 openNewHighscoreWindow(game.getScore());
             } else {
-                game.start();
+                game.start(1);
             }
         } else {
-            game.start();
+            game.start(1);
         }
     }
     
@@ -56,7 +56,7 @@ public class GameWindowController implements GameOverListener{
     private void exit() {
         if (game.getGameState() != GameState.OFF) {
             game.stop();
-            if (Board.getScoreBoard(0).isNewHighScore(game.getScore())) {
+            if (Board.getScoreBoard(game.getLabyrinth()).isNewHighScore(game.getScore())) {
                 openNewHighscoreWindow(game.getScore());
             } else {
                 Stage window = (Stage) gameScene.getWindow();
@@ -70,7 +70,11 @@ public class GameWindowController implements GameOverListener{
     
     @FXML
     private void openScoreboard() {
-        game.pause(false);
+        game.pause();
+        openScoreboard(0, -1);
+    }
+
+    static void openScoreboard(int boardNumber, int position) {
         Stage scoreboardWindow = new Stage();
         scoreboardWindow.setTitle("Scoreboard");
         
@@ -78,9 +82,12 @@ public class GameWindowController implements GameOverListener{
             FXMLLoader loader = new FXMLLoader();
             Scene scene = (Scene) loader.load(fxmlStream);
             scoreboardWindow.setScene(scene);
+
+            ScoreboardWindowController controller = loader.<ScoreboardWindowController>getController();
+            controller.fillWithContent(boardNumber, position);
             
             // modality
-            Stage window = (Stage) gameScene.getWindow();
+            Stage window = Main.getStage();
             scoreboardWindow.initOwner(window);
             scoreboardWindow.initModality(Modality.APPLICATION_MODAL);
             scoreboardWindow.showAndWait();
@@ -88,10 +95,6 @@ public class GameWindowController implements GameOverListener{
             ex.printStackTrace();
             scoreboardWindow.close();
         }
-    }
-
-    public void gameOver(int score) {
-        openNewHighscoreWindow(score);
     }
 
     private void openNewHighscoreWindow(int newScore) {
@@ -108,11 +111,19 @@ public class GameWindowController implements GameOverListener{
 
             NewHighscoreWindowController controller = loader.<NewHighscoreWindowController>getController();
             controller.setNewScore(newScore);
+            controller.setLabyrinthNumber(game.getLabyrinth());
 
             newHighscoreWindow.show();
         } catch (IOException ex) {
             ex.printStackTrace();
             newHighscoreWindow.close();
+        }
+    }
+
+    @Override
+    public void gameOver(int score) {
+        if (Board.getScoreBoard(game.getLabyrinth()).isNewHighScore(score)) {
+            openNewHighscoreWindow(score);
         }
     }
 }
