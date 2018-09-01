@@ -93,7 +93,7 @@ public class Record {
     // and escapes '\\', '\'', '"' characters
     private static String quoteString(String s) {
         // $1 is a reference to ('|"|\\) group
-        return "\"" + s.replace("(\'|\"|\\\\)", "\\\\$1") + "\"";
+        return "\"" + s.replaceAll("(\'|\"|\\\\)", "\\\\$1") + "\"";
     }
 
     // Removes: leading whitespaces, whitespaces after the last string
@@ -106,17 +106,6 @@ public class Record {
     }
 
     private static boolean needsQuotation(String s) {
-        boolean onlyNumbers = true;
-
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) < '0' || s.charAt(i) > '9') {
-                onlyNumbers = false;
-            }
-            if (s.charAt(i) == ' ' || s.charAt(i) == '@'
-                    || (s.charAt(0) >= '0' && s.charAt(0) <= '9')) {
-                return true;
-            }
-        }
-        return onlyNumbers;
+        return s.matches("(\\d+|.*(\\s+|@|\"|\'|\\\\).*|\\d.*)");
     }
 }
