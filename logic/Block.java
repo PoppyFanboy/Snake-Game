@@ -64,19 +64,9 @@ public class Block implements ObjectOnField {
         }
     }
 
-    public static void fillRect(GraphicsContext gc, double aX, double aY, double aWidth, double aHeight) {
-        // if we let arguments be doubles, then edges
-        // of the shape would be surrounded with half-transparent border,
-        // so when one "blurry" shape overlays another one,
-        // "half-transparent borders" also overlay each other.
-        // As a result the shape looks thicker
-        int x = (int) aX;
-        int y = (int) aY;
-        int width = (int) aWidth;
-        int height = (int) aHeight;
-
+    public static void fillRect(GraphicsContext gc, double x, double y, double width, double height) {
         gc.setFill(Color.BLACK);
-        gc.fillRect((int) x, (int) y, (int) width, (int) height);
+        gc.fillRect(x, y, width, height);
 
         if (x < 0) {
             gc.fillRect(x + Main.GAME_WIDTH, y, width, height);

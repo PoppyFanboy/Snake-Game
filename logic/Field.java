@@ -13,6 +13,8 @@ import javafx.scene.paint.Color;
 import java.util.*;
 
 import poppyfanboy.snakegame.Main;
+import poppyfanboy.snakegame.gui.GameOverListener;
+
 import static poppyfanboy.snakegame.logic.IntVector.vector;
 
 public class Field {
@@ -46,6 +48,15 @@ public class Field {
     boolean checkCollision(IntVector coords) {
         for (ObjectOnField object : gameField) {
             if (object.collision(coords)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean checkCollision(IntVector coords, Class<? extends ObjectOnField> exception) {
+        for (ObjectOnField object : gameField) {
+            if (object.getClass() != exception && object.collision(coords)) {
                 return true;
             }
         }

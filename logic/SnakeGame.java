@@ -170,10 +170,10 @@ public class SnakeGame {
 		lastSpeedUp += elapsedTime;
 
 		while (timeBuffer >= speed) {
-			if (snake.isSafeToMove(field)) {
-				score += snake.move(field);
-				scoreField.setText("Score:  " + score);
-			} else {
+			score += snake.move(field);
+			scoreField.setText("Score:  " + score);
+
+			if (snake.isDead(field)) {
 				this.stop();
 				for (GameOverListener listener : listeners) {
 					listener.gameOver(score);

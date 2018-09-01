@@ -38,7 +38,7 @@ class Snake implements ObjectOnField {
 	// костыль: если значение == true, то нажатия любых клавиш не обрабатываются
 	private boolean keyPressed = false;
 
-	private double thickness = 0.8;
+	private double thickness = 0.7;
 	
 	Snake(GraphicsContext gc) {
 		this.gc = gc;
@@ -76,7 +76,6 @@ class Snake implements ObjectOnField {
 			blocks.set(i, new Block(newCoordsMod, blockSize, Color.BLACK, thickness));
 			newCoordsMod = prevCoords;
 		}
-		Block.fillLine(gc, newCoords, blocks.get(1).getCoords(), blockSize, thickness);
 
 		if (!grown) {
 			oldTail.paint(gc, Color.WHITE, 1.0);
@@ -84,13 +83,20 @@ class Snake implements ObjectOnField {
 			field.generateFood();
 		}
 
+		Block.fillLine(gc, newCoords, blocks.get(1).getCoords(), blockSize, thickness);
+
 		return earnedPoints;
 	}
-	
-	// returns true if the snake is able to move further
-	boolean isSafeToMove(Field field) {
-		IntVector newCoords = blocks.get(0).getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
-		return !field.checkCollision(newCoords);
+
+	boolean isDead(Field field) {
+		IntVector head = blocks.get(0).getCoords();
+		for (int i = 1; i < blocks.size(); i++) {
+			if (head.equals(blocks.get(i).getCoords())) {
+				return true;
+			}
+		}
+
+		return field.checkCollision(head, Snake.class);
 	}
 
 	// changes the direction of the snake
