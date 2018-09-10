@@ -41,6 +41,10 @@ public class IntVector {
         return new IntVector(this.x, this.y + y);
     }
 
+    public IntVector invert() {
+        return new IntVector(-this.x, -this.y);
+    }
+
     public int getX() {
         return x;
     }

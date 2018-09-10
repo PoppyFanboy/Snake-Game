@@ -44,12 +44,15 @@ public class Block implements ObjectOnField {
         paint(gc, color, fract);
     }
 
-    public static void fillLine(GraphicsContext gc, IntVector first, IntVector second, int size, double fract) {
-        int x, y;
+    public static void fillLine(GraphicsContext gc, IntVector first, IntVector second, int size, double fract, Color color) {
+        double x, y, width, height;
 
-        if (first.getX() < second.getX() || first.getY() < second.getY()) {
-            x = size * first.getX();
+        if (first.getX() < second.getX()) {
+            x = size * first.getX() + size * fract;
             y = size * first.getY();
+        } else if (first.getY() < second.getY()) {
+            x = size * first.getX();
+            y = size * first.getY() + size * fract;
         } else {
             x = size * second.getX();
             y = size * second.getY();
@@ -57,15 +60,15 @@ public class Block implements ObjectOnField {
 
         if (first.getX() == second.getX()) {
             fillRect(gc, x + size * (1 - fract) / 2.0,
-                    y + size * (1 - fract) / 2.0, size * fract, size * fract + size);
+                    y + size * (1 - fract) / 2.0, size * fract, size, color);
         } else {
             fillRect(gc, x + size * (1 - fract) / 2.0,
-                    y + size * (1 - fract) / 2.0, size * fract + size, size * fract);
+                    y + size * (1 - fract) / 2.0, size, size * fract, color);
         }
     }
 
-    public static void fillRect(GraphicsContext gc, double x, double y, double width, double height) {
-        gc.setFill(Color.BLACK);
+    public static void fillRect(GraphicsContext gc, double x, double y, double width, double height, Color color) {
+        gc.setFill(color);
         gc.fillRect(x, y, width, height);
 
         if (x < 0) {

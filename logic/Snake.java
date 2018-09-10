@@ -33,7 +33,7 @@ class Snake implements ObjectOnField {
 	private GraphicsContext gc;
 	private int blockSize = Main.GAME_WIDTH / Field.FIELD_WIDTH;
 
-	ArrayList<Block> blocks = new ArrayList<>();
+	ArrayList<SnakeBlock> blocks = new ArrayList<>();
 
 	// костыль: если значение == true, то нажатия любых клавиш не обрабатываются
 	private boolean keyPressed = false;
@@ -47,7 +47,7 @@ class Snake implements ObjectOnField {
 		int initLength = 5;
 
 		for (int i = 1; i <= initLength; i++) {
-			blocks.add(new Block(prev, blockSize, Color.BLACK, thickness));
+			blocks.add(new SnakeBlock(prev, blockSize, Color.BLACK, thickness, Direction.LEFT));
 			prev = prev.incX(1);
 		}
 		
@@ -60,30 +60,35 @@ class Snake implements ObjectOnField {
 
 		IntVector newCoordsMod = blocks.get(0).getCoords().add(dir.getOffset()).mod(Field.FIELD_WIDTH);
 		IntVector newCoords = blocks.get(0).getCoords().add(dir.getOffset());
+		Direction newDir = dir;
 
 		boolean grown = false;
-		Block oldTail = blocks.get(blocks.size() - 1);
+		IntVector oldTail = blocks.get(blocks.size() - 1).getCoords();
 
 		if (field.getFood().getCoords().equals(newCoordsMod)) {
 			earnedPoints = 10;
 
-			blocks.add(1, new Block(blocks.get(0).getCoords(), blockSize, Color.BLACK, thickness));
+			blocks.add(1, new SnakeBlock(blocks.get(0).getCoords(), blockSize, Color.BLACK, thickness, dir));
 			grown = true;
 		}
 
 		for (int i = 0; i < (grown ? 2 : blocks.size()); i++) {
 			IntVector prevCoords = blocks.get(i).getCoords();
-			blocks.set(i, new Block(newCoordsMod, blockSize, Color.BLACK, thickness));
+			Direction prevDir = blocks.get(i).getDir();
+			blocks.set(i, new SnakeBlock(newCoordsMod, blockSize, Color.BLACK, thickness, newDir));
 			newCoordsMod = prevCoords;
+			newDir = prevDir;
 		}
 
 		if (!grown) {
-			oldTail.paint(gc, Color.WHITE, 1.0);
+			SnakeBlock tail = blocks.get(blocks.size() - 1);
+			Block.fillLine(gc, tail.getCoords(), tail.getCoords().add(tail.getDir().getOffset().invert()),
+					blockSize, thickness, Color.WHITE);
 		} else {
 			field.generateFood();
 		}
 
-		Block.fillLine(gc, newCoords, blocks.get(1).getCoords(), blockSize, thickness);
+		Block.fillLine(gc, blocks.get(1).getCoords(), newCoords, blockSize, thickness, Color.BLACK);
 
 		return earnedPoints;
 	}
@@ -131,11 +136,9 @@ class Snake implements ObjectOnField {
 	}
 
 	public void paint(GraphicsContext gc, Color color) {
-		for (int i = 0; i < blocks.size(); i++) {
-			if (i > 0) {
-				Block.fillLine(gc, blocks.get(i - 1).getCoords(),
-						blocks.get(i).getCoords(), blockSize, thickness);
-			}
+		for (int i = blocks.size() - 2; i >= 0; i--) {
+			Block.fillLine(gc, blocks.get(i + 1).getCoords(),
+					blocks.get(i).getCoords(), blockSize, thickness, Color.BLACK);
 		}
 	}
 
