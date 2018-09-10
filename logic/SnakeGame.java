@@ -52,7 +52,7 @@ public class SnakeGame {
 	// an indicator of buffer time available
 	// for performing movement of a snake in seconds
 	private double timeBuffer;
-	// point of time in seconds when last sequence
+	// point of time in seconds when the last sequence
 	// of movements was performed
 	private double lastMove;
 	// time passed after last increment of speed
@@ -182,10 +182,14 @@ public class SnakeGame {
 			timeBuffer -= speed;
 		}
 
-		if (lastSpeedUp >= SPEED_UP_INTERVAL) {
-			lastSpeedUp = 0;
+		while (lastSpeedUp >= SPEED_UP_INTERVAL) {
+			lastSpeedUp -= SPEED_UP_INTERVAL;
 			if (speed >= 0.025) {
+				double oldSpeed = speed;
 				speed *= 0.75;
+				// preserving proportions
+				timeBuffer = timeBuffer / oldSpeed * speed;
+
 				speedLevel++;
 				speedField.setText(String.format("Speed:  %d", speedLevel));
 			}
