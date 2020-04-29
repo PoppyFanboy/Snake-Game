@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Scene xmlns="http://javafx.com/javafx"
+       xmlns:fx="http://javafx.com/fxml"
+       fx:controller="poppyfanboy.snakegame.gui.OptionsWindowController"
+       fx:id="scene">
+
+    <VBox spacing="20" styleClass="main-pane">
+        <HBox spacing="20">
+            <VBox spacing="10">
+                <Label styleClass="heading">Game Mode</Label>
+                <RadioButton onAction="#update" styleClass="radiobutton" fx:id="modeBttn1">Easy (x10)</RadioButton>
+                <RadioButton onAction="#update" styleClass="radiobutton" fx:id="modeBttn2">Medium (x20)</RadioButton>
+                <RadioButton onAction="#update" styleClass="radiobutton" fx:id="modeBttn3">Hard (x40)</RadioButton>
+                <RadioButton onAction="#update" styleClass="radiobutton" fx:id="modeBttn4">Zen (x1)</RadioButton>
+                <Label styleClass="radiobutton">Snake Speed:</Label>
+                <HBox styleClass="radiobutton">
+                    <Button fx:id="upBttn" disable="true" onAction="#decZenSpeed">∨</Button>
+                    <TextField styleClass="speed-field" disable="true" fx:id="zenSpeedField">1</TextField>
+                    <Button fx:id = "downBttn" disable="true" onAction="#incZenSpeed">∧</Button>
+                </HBox>
+            </VBox>
+
+            <VBox spacing="10">
+                <Label styleClass="heading">Labyrinth Type</Label>
+                <RadioButton onAction="#update" styleClass="radiobutton" fx:id="labBttn1">Empty (x1)</RadioButton>
+                <RadioButton onAction="#update" styleClass="radiobutton" fx:id="labBttn2">No Way Out (x2)</RadioButton>
+                <RadioButton onAction="#update" styleClass="radiobutton" fx:id="labBttn3">Rugby Field (x2)</RadioButton>
+                <RadioButton onAction="#update" styleClass="radiobutton" fx:id="labBttn4">Spiral (x2)</RadioButton>
+                <RadioButton onAction="#update" styleClass="radiobutton" fx:id="labBttn5">Claustrophobia (x3)</RadioButton>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="5">
+            <Label fx:id="multiplierLabel" styleClass="multiplier">Total multiplier: x4</Label>
+            <HBox spacing="10">
+                <Button onAction="#save" styleClass="button">Apply</Button>
+                <Button onAction="#discard" styleClass="button">Discard Changes</Button>
+            </HBox>
+        </VBox>
+    </VBox>
+</Scene>

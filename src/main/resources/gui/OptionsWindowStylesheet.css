@@ -1,0 +1,31 @@
+.heading {
+    -fx-font-size: 1.6em;
+    -fx-font-family: Arial;
+}
+
+.radiobutton {
+    -fx-font-size: 1.4em;
+    -fx-font-family: Helvetica;
+}
+
+.button {
+    -fx-font-size: 1.4em;
+    -fx-font-family: Helvetica;
+}
+
+.multiplier {
+    -fx-font-size: 1.6em;
+    -fx-font-family: "Arial";
+    -fx-font-weight: Bold;
+    -fx-text-fill: #ff3008;
+}
+
+.main-pane {
+    -fx-padding: 20 20 20 20;
+    -fx-background-color: White;
+}
+
+.speed-field {
+    -fx-pref-width: 3em;
+    -fx-opacity: 1.0;
+}
