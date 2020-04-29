@@ -1,19 +1,53 @@
 plugins {
     id 'java'
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
-    id 'idea'
 }
 
 repositories {
     mavenCentral()
 }
 
-javafx {
-    version = "14"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
+dependencies {
+    compile "org.openjfx:javafx-base:14:${platform}"
+    compile "org.openjfx:javafx-graphics:14:${platform}"
+    compile "org.openjfx:javafx-controls:14:${platform}"
+    compile "org.openjfx:javafx-fxml:14:${platform}"
 }
 
-application {
-    mainClassName = 'poppyfanboy.snakegame.Main'
+jar {
+    manifest {
+        attributes 'Main-Class': 'poppyfanboy.snakegame.Main'
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+compileJava {
+    doFirst {
+        options.compilerArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls,javafx.fxml'
+        ]
+    }
+}
+
+task run(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "poppyfanboy.snakegame.Main"
+
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', 'javafx.controls,javafx.fxml'
+        ]
+    }
 }
